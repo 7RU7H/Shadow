@@ -12,12 +12,13 @@ import (
 	"os"
 	"os/exec"
 	"path/filepath"
-	"strconv"
 	"strings"
 	"sync"
 	"syscall"
 
-	"ninjashell/cli"
+	"ninjashell/gc.go"
+	"ninjashell/tcp.go"
+	"ninjashell/udp.go"
 )
 
 
@@ -88,7 +89,6 @@ func marshallNouncesAndChunks(nounceStub []byte, chunks [][]byte) []byte {
 	}
 	return buffer.Bytes()
 }
-	
 
 func transformFile(file string) []bytes {
 	chunks := splitFileToChunks(file, 1024)
@@ -111,10 +111,6 @@ func transformFile(file string) []bytes {
 			}	
 	return chunks
 }
-
-
-
-
 
 //Create stub message to warn receiver that the file is being transferred and whether it is encrypted or not
 func prepareFileTransferMessage(nounceStubSize, fileSize int, isEncrypted bool) []byte {
@@ -184,151 +180,22 @@ func rejectFileTransfer() {
 	conn.Write(rejectMessage)
 }
 
-//Handles TCP connections and performs synchroninization
-//TCP -> Stdout	and Stdin -> TCP
-func tcpConnectionHandler(connection net.Conn) {
-	chanStdout := copyTCPStream(connection, os.Stdout)
-	chanStdin := copyTCPStream(os.Stdin, connection)
-	select {
-		case <-chanStdout:
-			log.Println("Stdout closed")
-		case <-chanStdin:
-			log.Println("Stdin closed")
-	}		
-}
-
-//Copy streams between os and tpc stream
-func copyTCPStream(src io.Reader, dst io.Writer) <-chan int {
-	buf := make([]byte, 1024)
-	sync_channel := make(chan int)
-	go func() {
-		defer func() {
-			if con, ok := dst.(*net.TCPConn); ok {
-				con.CloseWrite()
-				log.Printfc("Closed connection from %s", con.RemoteAddr().String())
-			}
-			sync_channel <- 0 //Notify finished processing
-		}()
-		for {	
-			nBytes, err := src.Read(buf)
-			if err != nil {
-				log.Printf("Error reading from source: %s", err)
-				return
-			}
-			break
-		}
-		_, err = dst.Write(buf[:nBytes])
-		if err != nil {
-			log.Printf("Error writing to destination: %s", err)
-			return
-		}
-	}()
-	return sync_channel
-}
-
-//Accept data from UDP connection and copy it to the stream
-func fromUDPToStream(connection *net.UDPConn, dst io.Writer) <-chan net.Addr {
-	buf := make([]byte, 1024)
-	sync_channel := make(chan net.Addr)
-	con, err := src.(*net.UDPConn)
-	if !ok {
-		log.Fatal("Error casting source to UDP connection")
-		return sync_channel
-	}
-	go func() {
-		var remoteAddr net.Addr
-		for {
-			nBytes, err := con.ReadFromUDP(buf)
-			if err != nil {
-				if err != io.EOF {
-					log.Printf("Error reading from source: %s", err)
-					}
-					break
-			}
-			if remoteAddr == nil && remoteAddr != addr {
-				remoteAddr = addr
-				sync_channel <- remoteAddr
-			}
-			_, err = dst.Write(buf[:nBytes])
-			if err != nil {
-				log.Printf("Error writing to destination: %s", err)
-			}
-		}
-	}()
-	log.Printf("Closed connection from %s", con.RemoteAddr().String())
-	return sync_channel
-}
-
-//Input data from stream to UDP connection
-func fromStreamToUDP(src io.Reader, dst net.Conn, remoteADdr net.Addr) <-chan net.Addr {
-	buf := make([]byte, 1024)
-	sync_channel := make(chan net.Addr)
-	if !ok {
-		log.Fatal("Error casting source to UDP connection")
-		return sync_channel
-	}
-	go func() {
-		var remoteAddr net.Addr
-		for {
-			nBytes, err := src.Read(buf)
-			if err != nil {
-				if err != io.EOF {
-					log.Printf("Error reading from source: %s", err)
-					}
-					break
-			}
-			if remoteAddr == nil && remoteAddr != addr {
-				remoteAddr = addr
-				sync_channel <- remoteAddr
-			}
-			_, err = con.WriteToUDP(buf[:nBytes], remoteAddr)
-			if err != nil {
-				log.Printf("Error writing to destination: %s", err)
-			}
-		}
-	}()
-	log.Printf("Closed connection from %s", con.RemoteAddr().String())
-	return sync_channel
-}
-
-//Handle UDP connections and perform synchroninization
-func udpConnectionHandler(connection *net.UDPConn) {
-	chanStdout := fromUDPToStream(connection, os.Stdout)
-	log.Printf("Awaiting connection from %s", connection.RemoteAddr().String())
-	remoteAddr := <-chanStdout
-	log.Printf("Connected from %s", remoteAddr.String())
-	chanStdin := fromStreamToUDP(os.Stdin, connection, addr)
-	select {
-		case <-chanStdout:
-			log.Println("Remote connection closed")
-		case <-chanStdin:
-			log.Println("Local program terminated")
-	}		
-}
 
 
 
 
 
-//Create a progress bar for the file transfer in Stdout for listener
-func createProgressBar(fileSize int) {
-	bar := pb.New(fileSize)
-	bar.SetMaxWidth(80)
-	bar.SetRefreshRate(time.Millisecond * 10)
-	bar.Start()
-	return bar
-}
 
-//Update the progress bar for the file transfer in Stdout for listener
-func updateProgressBar(bar *pb.ProgressBar, nBytes int) {
-	bar.Increment()
-}
+
+
+
 
 
 
 
 func main() {
-	os.Exit(cli.Run())
+	os.Exit(go.CLI(os.Args[1:]))
+}
 
 	
 
