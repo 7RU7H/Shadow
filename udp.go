@@ -8,7 +8,7 @@ import (
 )
 
 //Accept data from UDP connection and copy it to the stream
-func fromUDPToStream(connection *net.UDPConn, dst io.Writer) <-chan net.Addr {
+func FromUDPToStream(connection *net.UDPConn, dst io.Writer) <-chan net.Addr {
 	buf := make([]byte, 1024)
 	sync_channel := make(chan net.Addr)
 	con, err := src.(*net.UDPConn)
@@ -41,7 +41,7 @@ func fromUDPToStream(connection *net.UDPConn, dst io.Writer) <-chan net.Addr {
 }
 
 //Input data from stream to UDP connection
-func fromStreamToUDP(src io.Reader, dst net.Conn, remoteADdr net.Addr) <-chan net.Addr {
+func FromStreamToUDP(src io.Reader, dst net.Conn, remoteAddr net.Addr) <-chan net.Addr {
 	buf := make([]byte, 1024)
 	sync_channel := make(chan net.Addr)
 	if !ok {
@@ -73,12 +73,12 @@ func fromStreamToUDP(src io.Reader, dst net.Conn, remoteADdr net.Addr) <-chan ne
 }
 
 //Handle UDP connections and perform synchroninization
-func udpConnectionHandler(connection *net.UDPConn) {
-	chanStdout := fromUDPToStream(connection, os.Stdout)
+func UDPConnectionHandler(connection *net.UDPConn) {
+	chanStdout := FromUDPToStream(connection, os.Stdout)
 	log.Printf("Awaiting connection from %s", connection.RemoteAddr().String())
 	remoteAddr := <-chanStdout
 	log.Printf("Connected from %s", remoteAddr.String())
-	chanStdin := fromStreamToUDP(os.Stdin, connection, addr)
+	chanStdin := FromStreamToUDP(os.Stdin, connection, addr)
 	select {
 	case <-chanStdout:
 		log.Println("Remote connection closed")
