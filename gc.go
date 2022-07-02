@@ -14,12 +14,11 @@ import (
 )
 
 type appEnv struct {
-	command         string
 	isListener      bool
 	isClient        bool
 	isFileTransfer  bool
-	sourcePort      int
-	destinationPort int
+	sourcePort      string
+	destinationPort string
 	ipAddress       string
 	srcFilepath     string
 	dstFilepath     string
@@ -27,25 +26,24 @@ type appEnv struct {
 	password        string
 	isEncrypted     bool
 	isUDP           bool
-	progressBar   bool
+	progressBar   	bool
 	supportedShells []string
 }
 
-func (a *appEnv) setDefaultConfig() {
-	a.command = ""
-	a.isListener = false
-	a.isClient = false
-	a.isFileTransfer = false
-	a.sourcePort = 60000
-	a.destinationPort = 60000
-	a.ipAddress = ""
-	a.srcFilepath = ""
-	a.dstFilepath = ""
-	a.shellSpecifier = ""
-	a.password = ""
-	a.isEncrypted = false
-	a.supportedShells = []string{"cmd.exe", "powershell.exe", "/bin/bash", "/bin/sh"}
-	a.progressBar = false
+func (app *appEnv) setDefaultConfig() {
+	app.isListener = false
+	app.isClient = false
+	app.isFileTransfer = false
+	app.sourcePort = "0"
+	app.destinationPort = "0"
+	app.ipAddress = ""
+	app.srcFilepath = ""
+	app.dstFilepath = ""
+	app.shellSpecifier = ""
+	app.password = ""
+	app.isEncrypted = false
+	app.supportedShells = []string{"cmd.exe", "powershell.exe", "/bin/bash", "/bin/sh"}
+	app.progressBar = false
 }
 
 func checkError(err error) {
@@ -86,27 +84,12 @@ func checkFileExists(path string) bool {
 	return true
 }
 
-//Create a progress bar for the file transfer in Stdout for listener
-func createProgressBar(fileSize int) {
-	bar := pb.New(fileSize)
-	bar.SetMaxWidth(80)
-	bar.SetRefreshRate(time.Millisecond * 10)
-	bar.Start()
-	return bar
-}
-
-//Update the progress bar for the file transfer in Stdout for listener
-func updateProgressBar(bar *pb.ProgressBar, nBytes int) {
-	bar.Increment()
-}
-
 func (app *appEnv) fromArgs(args []string) error {
 	app.setDefaultConfig()
 	//Flag variables
 	var password, shellSpecifier, ipAddress, srcFilepath, dstFilepath string
-	var sourcePort, destinationPort int
-	var isEncrypted, isUDP, progressBar bool
-	var validFile, validShell, validPassword, validIP, validPort bool
+	var testValidPortNum int
+	var isEncrypted, isUDP, progressBar, validFile, validShell, validPassword, validIP, validPort bool
 	supportedShells := []string{"cmd.exe", "powershell.exe", "/bin/bash", "/bin/sh"}
 
 	//Subcommands
@@ -115,7 +98,7 @@ func (app *appEnv) fromArgs(args []string) error {
 	fileTransferCommand := flag.NewFlagSet("-f", flag.ExitOnError)
 
 	//Listener subcommand flags
-	listenerCommand.IntVar(&sourcePort, "-p", 0, "Sourc port")
+	listenerCommand.StringVar(&sourcePort, "-p", "0", "Source port")
 	listenerCommand.BoolVar(&isEncrypted, "-e", false, "Encryption")
 	listenerCommand.StringVar(&password, "-k", "", "Password is require for encryption")
 	listenerCommand.StringVar(&dstFilepath, "-f", "", "File path")
@@ -123,7 +106,7 @@ func (app *appEnv) fromArgs(args []string) error {
 	listenerCommand.BoolVar(&progressBar, "-b", false, "Optional progress bar to view file transfer progress")
 
 	//Client subcommand flags
-	clientCommand.IntVar(&destinationPort, "-d", 0, "Destination port")
+	clientCommand.StringVar(&destinationPort, "-d", "0", "Destination port")
 	clientCommand.StringVar(&ipAddress, "-i", "", "IP address")
 	clientCommand.BoolVar(&isEncrypted, "-e", false, "Encryption")
 	clientCommand.StringVar(&password, "-k", "", "Password is required for encryption")
@@ -131,7 +114,7 @@ func (app *appEnv) fromArgs(args []string) error {
 	clientCommand.BoolVar(&isUDP, "-u", false, "UDP client, Does not support file transfer use -f subcommand on client ")
 
 	//File transfer subcommand flags
-	fileTransferCommand.IntVar(&destinationPort, "-d", 0, "Destination port")
+	fileTransferCommand.StringVar(&destinationPort, "-d", "0", "Destination port")
 	fileTransferCommand.StringVar(&ipAddress, "-i", "", "IP address")
 	fileTransferCommand.BoolVar(&isEncrypted, "-e", false, "Encryption")
 	fileTransferCommand.StringVar(&password, "-k", "", "Password")
@@ -170,6 +153,7 @@ func (app *appEnv) fromArgs(args []string) error {
 		app.isListener = true
 		listenerCommand.Parse(args[2:])
 		app.sourcePort = sourcePort
+		testValidPortNum = strconv.Atoi(sourcePort)
 		app.isEncrypted = isEncrypted
 		app.password = password
 		app.dstFilepath = dstFilepath
@@ -178,6 +162,7 @@ func (app *appEnv) fromArgs(args []string) error {
 		app.isClient = true
 		clientCommand.Parse(args[2:])
 		app.destinationPort = destinationPort
+		testValidPortNum = strconv.Atoi(destinationPort)
 		app.ipAddress = ipAddress
 		app.isEncrypted = isEncrypted
 		app.password = password
@@ -187,6 +172,7 @@ func (app *appEnv) fromArgs(args []string) error {
 		app.isFileTransfer = true
 		fileTransferCommand.Parse(args[2:])
 		app.destinationPort = destinationPort
+		testValidPortNum = strconv.Atoi(destinationPort)
 		app.ipAddress = ipAddress
 		app.isEncrypted = isEncrypted
 		app.password = password
@@ -217,13 +203,13 @@ func (app *appEnv) fromArgs(args []string) error {
 		if app.shellSpecifier != "" {
 			return fmt.Errorf("Shell specifier is not supported for listener")
 		}
-		if app.sourcePort > 0 || app.sourcePort < 65535 {
+		if testValidPortNum > 0 || testValidPortNum < 65535 {
 			validPort = true
 		}
 	}
 
 	if app.isClient {
-		if app.destinationPort > 0 || app.destinationPort < 65535 {
+		if testValidPortNum > 0 || testValidPortNum < 65535 {
 			validPort = true
 		}
 		if checkValidIP(app.ipAddress) {
@@ -245,7 +231,7 @@ func (app *appEnv) fromArgs(args []string) error {
 	}
 
 	if app.isFileTransfer {
-		if app.destinationPort > 0 || app.destinationPort < 65535 {
+		if testValidPortNum > 0 || testValidPortNum < 65535 {
 			validPort = true
 		}
 		if checkValidIP(app.ipAddress) {
@@ -284,19 +270,73 @@ func (app *appEnv) fromArgs(args []string) error {
 	return nil
 }
 
-//Create a UDP hander listener from udp.go, if ctrl+c is pressed, close the listener
+func (app *appEnv) createUDPListener() error {
+	listener, err := net.Listen("udp", app.destinationPort)
+	checkError(err)
+	log.Println("Listening on", app.destinationPort)
+	connection, err := listener.Accept()
+	checkError(err)
+	log.Println("Connection from ", connection.RemoteAddr())
+	udp.UDPConnectionHandler(connection)
+}
+
+//func (app *appEnv) createListenerUDPEncrypted() error  {}
+
+//func (app *appEnv) createListenerEncrypted() error  {}
+
+func (app *appEnv) createTCPListener() error  {
+	listener, err := net.Listen("tcp", app.destinationPort)
+	checkError(err)
+	log.Println("Listening on", app.destinationPort)
+	connection, err := listener.Accept()
+	checkError(err)
+	log.Println("Connection from ", connection.RemoteAddr())
+	tcp.TCPConnectionHandler(connection)
+}
+
+func (app *appEnv) createTCPClient() error  {
+	connection, err, := net.Dial("tcp", )
+	checkError(err)
+
+}
+
+func (app *appEnv) createTCPClientEncrypted() error  {
+
+}
+
+func (app *appEnv) createUDPClient() error  {
+
+}
+
+func (app *appEnv) createUDPClientEncrypted() error  {
+
+}
+
+func (app *appEnv) fileTransferEncrypted() error  {
+
+}
+
+func (app *appEnv) fileTransfer() error  {
+
+}
+
+func (app. *appEnv) union (string error) {
 
 
+}
 
-
-//Execute listener based on parameters provided
-func (app *appEnv) execListener() error {
+//Select listener based on parameters provided
+func (app *appEnv) selectListener() error {
 	if app.isUDP {
-		err = app.createUDPListenerDP()
+		if app.isEncrypted {
+			err = app.createUDPEncryptedListener()
+		} else {
+		err = app.createUDPListener()
+		}
 	} else if app.isEncrypted {
 		err = app.createListenerEncrypted()
 	} else {
-		err = app.createListenerTCP()
+		err = app.createTCPListener()
 	}
 	if err != nil {
 		return fmt.Errorf("Error setting up Listener: %s", err)
@@ -304,24 +344,24 @@ func (app *appEnv) execListener() error {
 	return nil
 }
 
-func (app *appEnv) execClient() error {
+func (app *appEnv) selectClient() error {
 	if app.isUDP {
 		if app.isEncrypted {
-			err = app.clientEncryptedUDP()
+			err = app.clientUDPEncrypted()
 		} else {
 		err = app.clientUDP()
 		}
 	} else if app.isEncrypted {
-		err = app.clientEncryptedTCP()
+		err = app.clientTCPEncrypted()
 	} else {
-		err = app.clientTCP()
+		err = app.createTCPClient()
 	}
 	if err != nil {
 		return fmt.Errorf("Error connecting to server: %s", err)
 	}
 }
 
-func (app *appEnv) execFileTransfer() error {
+func (app *appEnv) selectFileTransfer() error {
 	if app.isUDP {
 		return fmt.Errorf("UDP file transfer is not supported")
 	}
@@ -341,16 +381,16 @@ func (app *appEnv) execFileTransfer() error {
 func (app *appEnv) run() error {
 	//Switch based on command passed by user
 	switch app.command {
-	case "-l":
-			err = app.execListener(); if err != nil {
+		case "-l":
+			err = app.selectListener(); if err != nil {
 				return fmt.Errorf("Error running listener: %s", err)
 			}
 		case "-c":
-			err = app.execClient(); if err != nil {
+			err = app.selectClient(); if err != nil {
 				return fmt.Errorf("Error running client: %s", err)
 			}
 		case "-f":
-			err = app.execFileTransfer(); if err != nil {
+			err = app.selectFileTransfer(); if err != nil {
 				return fmt.Errorf("Error running file transfer: %s", err)
 			}
 		default:

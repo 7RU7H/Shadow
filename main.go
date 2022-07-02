@@ -19,6 +19,7 @@ import (
 	"ninjashell/gc.go"
 	"ninjashell/tcp.go"
 	"ninjashell/udp.go"
+	"ninjashell/filetransfer.go"
 )
 
 
@@ -157,6 +158,7 @@ func receiveEncryptedFile(conn net.Conn, nounceStubSize, fileSize int, ) {
 		log.Fatal(err)
 	}
 	//decrypt buffer with nounceStub
+}
 
 //Recieve a non-encrypted file from a sender
 func recieveRegularFile(conn net.Conn, fileSize int) {
@@ -179,15 +181,6 @@ func rejectFileTransfer() {
 	rejectMessage := []byte("REJECT")
 	conn.Write(rejectMessage)
 }
-
-
-
-
-
-
-
-
-
 
 
 

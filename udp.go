@@ -8,7 +8,7 @@ import (
 )
 
 //Accept data from UDP connection and copy it to the stream
-func FromUDPToStream(connection *net.UDPConn, dst io.Writer) <-chan net.Addr {
+func FromUDPToStream(connection net.UDPConn, dst io.Writer) <-chan net.Addr {
 	buf := make([]byte, 1024)
 	sync_channel := make(chan net.Addr)
 	con, err := src.(*net.UDPConn)
@@ -73,7 +73,7 @@ func FromStreamToUDP(src io.Reader, dst net.Conn, remoteAddr net.Addr) <-chan ne
 }
 
 //Handle UDP connections and perform synchroninization
-func UDPConnectionHandler(connection *net.UDPConn) {
+func UDPConnectionHandler(connection net.UDPConn) {
 	chanStdout := FromUDPToStream(connection, os.Stdout)
 	log.Printf("Awaiting connection from %s", connection.RemoteAddr().String())
 	remoteAddr := <-chanStdout
