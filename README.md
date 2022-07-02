@@ -1,7 +1,8 @@
 # ninjashell
 Can't think of better name just yet so working title is ninjashell
 
-Trying out github copilot to speed up and revise my golang a bit if that is a problem, I apologise to poor copilot being dragged through dealing with me learning. 
+Disclaimer:
+Trying out github copilot to speed up and revise my golang a bit if that is a problem, I apologise to poor copilot being dragged through dealing with me learning. Quite happy to have help and help managing anything, accepting additions and very willing to take a backseat to anyone wants to replace/join the copilot on pedestal of cringe. Willing to end using copilot if a majority vote of anything greater than one decides against me, but for now I just want something that works.
 
 Golang Netcat/Socat/Ncat-like with file transfer, encrypted transfer and traffic
 
