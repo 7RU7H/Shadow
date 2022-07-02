@@ -20,6 +20,7 @@ type appEnv struct {
 	sourcePort      string
 	destinationPort string
 	ipAddress       string
+	remoteAddress	string
 	srcFilepath     string
 	dstFilepath     string
 	shellSpecifier  string
@@ -38,6 +39,7 @@ func (app *appEnv) setDefaultConfig() {
 	app.destinationPort = "0"
 	app.ipAddress = ""
 	app.srcFilepath = ""
+	app.remoteAddress = ""
 	app.dstFilepath = ""
 	app.shellSpecifier = ""
 	app.password = ""
@@ -320,9 +322,14 @@ func (app *appEnv) fileTransfer() error  {
 
 }
 
-func (app. *appEnv) union (string error) {
-
-
+func (app. *appEnv) buildAddressString() (string error) {
+	builder := strings.Builder{}
+	if isListener {
+		builder.WRiteString(app.ipAddress,":",app.sourcePort)
+	} else {
+		builder.WriteString(app.ipAddress, ":",app.destinationPort)
+	}
+	return builder.String()
 }
 
 //Select listener based on parameters provided
@@ -386,10 +393,12 @@ func (app *appEnv) run() error {
 				return fmt.Errorf("Error running listener: %s", err)
 			}
 		case "-c":
+			app.remoteAddress = buildAddressString()
 			err = app.selectClient(); if err != nil {
 				return fmt.Errorf("Error running client: %s", err)
 			}
 		case "-f":
+			app.remoteAddress = buildAddressString()
 			err = app.selectFileTransfer(); if err != nil {
 				return fmt.Errorf("Error running file transfer: %s", err)
 			}
