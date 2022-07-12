@@ -10,7 +10,7 @@ Inspired and refactored from old versions of go netcat clones on github [go-netc
 
 Early Days, having way too much fun with Copilot.
 
-# Hopes and dreams on feature creep scrapped from the back of my skull.
+Hopes and dreams on feature creep scrapped from the back of my skull.
 
 Payload injection
 Process migration awareness
