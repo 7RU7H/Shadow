@@ -24,7 +24,7 @@ import (
 )
 
 func main() {
-	os.Exit(go.CLI(os.Args[1:]))
+	os.Exit(gc.CLI(os.Args[1:]))
 }
 
 
