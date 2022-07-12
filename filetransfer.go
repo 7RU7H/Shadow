@@ -64,7 +64,7 @@ func marshallNouncesAndChunks(nounceStub []byte, chunks [][]byte) []byte {
 
 
 //Create stub message to warn receiver that the file is being transferred and whether it is encrypted or not
-func prepareFileTransferMessage(nounceStubSize, fileSize int, isEncrypted bool) []byte {
+func PrepareFileTransferMessage(nounceStubSize, fileSize int, isEncrypted bool) []byte {
 	if !isEncrypted && nounceStubSize == 0 {
 		fileTransferMessage := []byte("FILETRANSFER" + strconv.Itoa(fileSize))
 		return fileTransferMessage 
@@ -74,7 +74,7 @@ func prepareFileTransferMessage(nounceStubSize, fileSize int, isEncrypted bool) 
 }
 
 //Decodes incoming message and returns the file size and whether it is encrypted or not and if so with nounce stub size
-func decodeFileTransferPreparationMessage(message []byte) (bool, stubsize int, filesize int) {
+func DecodeFileTransferPreparationMessage(message []byte) (bool, stubsize int, filesize int) {
 	if strings.Contains(string(message), "ENCRYPTEDNOUCESTUBIS") {
 		stubsize = strings.Index(string(message), "ENCRYPTEDNOUCESTUBIS") + len("ENCRYPTEDNOUCESTUBIS")
 		filesize = strings.Index(string(message), "FILESIZEIS") + len("FILESIZEIS")
