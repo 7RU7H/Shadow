@@ -7,6 +7,19 @@ import (
 	"os"
 )
 
+//Handles Encrypted TCP connection and performs synchronization
+//TCP -> Decrypted Stdout and Encrypted Stdin -> TCP
+func EncryptedTCPConnectionHandler(connection net.Conn) {
+	chanStdout := DecryptTCPStream(connection, os.Stdout)
+	chanStdin := EncryptTCPStream(os.Stdin, connection)
+	select {
+	case <-chanStdout:
+		log.Println("Stdout closed")
+	case <-chanStdin:
+		log.Println("Stdin closed")
+	}
+}
+
 //Handles TCP connections and performs synchroninization
 //TCP -> Stdout	and Stdin -> TCP
 func TCPConnectionHandler(connection net.Conn) {
@@ -19,6 +32,9 @@ func TCPConnectionHandler(connection net.Conn) {
 		log.Println("Stdin closed")
 	}
 }
+
+//crypto.EncryptBuffer
+//crypto.DecryptBuffer
 
 //Copy streams between os and tpc stream
 func CopyTCPStream(src io.Reader, dst io.Writer) <-chan int {
@@ -33,9 +49,7 @@ func CopyTCPStream(src io.Reader, dst io.Writer) <-chan int {
 			sync_channel <- 0 //Notify finished processing
 		}()
 		for {
-			var nBytes int
-			var err error
-			nBytes, err = src.Read(buf)
+			nBytes, err := src.Read(buf)
 			if err != nil {
 				log.Printf("Error reading from source: %s", err)
 				return
