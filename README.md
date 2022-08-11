@@ -9,6 +9,10 @@ Ok a month on, been reading and researching a way and a few things came up that 
 1. Found out about Quic
 1. Researching more AV/IDS/IPS evasion techniques
 1. https://github.com/cheetz/c2
+1. Researching better Golang practice and project design like:
+	- Anything Project Discovery
+	- https://github.com/jpillora/chisel
+	- Regular application design best practices
  
 First researched a better way from The Hacker Playbook 2; TL DR - Build the Protocol
 
@@ -92,3 +96,4 @@ Tried out github copilot to speed up and revise my golang a bit if that is a pro
 Process hollowing - for shell to enter hash to evade IDS string matching with hashes on its own Database being a possible simple blueteam mitigation
 Payload injection
 Process migration awareness
+Shell

@@ -302,7 +302,10 @@ func (app *appEnv) createTCPClient() error  {
 
 }
 
-func (app *appEnv) createTCPClientEncrypted() error {
+<<<<<<< HEAD
+func (app *appEnv) createTCPClientEncrypted() error  {
+=======
+func (app *appEnv) createTCPClientEncrypted() {
         connection, err, := net.Dial("tcp", app.ipAddress+":"+app.destinationPort)
         checkError(err)
         log.Println("Connecting to", app.ipAddress+":"+app.destinationPort)
@@ -313,6 +316,7 @@ func (app *appEnv) createTCPClientEncrypted() error {
         //If response is OK, continue
         //If response is NO, exit
         //
+>>>>>>> 7e180cd (Encryption controlflow refactor and progress)
 
 }
 
@@ -394,6 +398,7 @@ func (app *appEnv) selectFileTransfer() error {
 }
 
 
+
 func (app *appEnv) run() error {
         //Switch based on command passed by user
         switch app.command {
@@ -418,6 +423,43 @@ func (app *appEnv) run() error {
         return nil
 }
 
+func main() {
+        var app appEnv
+        err := app.parseFlags(); if err != nil {
+                fmt.Println(err)
+                os.Exit(1)
+        }
+        err = app.run(); if err != nil {
+                fmt.Println(err)
+                os.Exit(1)
+        }
+}
+
+        case "c":
+                        err = app.execClient(); if err != nil {
+                                return fmt.Errorf()
+        case "-f":
+                        err = app.execFileTransfer(); if err != nil {
+                                return fmt.Errorf()
+        default:
+                        return fmt.Errorf("Invalid command")
+        }
+        return nil
+}
+
+func main() {
+        app := appEnv{}
+        err := app.parseArgs(os.Args)
+        if err != nil {
+                fmt.Println(err)
+                os.Exit(1)
+        }
+        default:
+                return fmt.Errorf("Invalid %s parsed and handed to run()", app.command)
+        }
+        return nil
+}
+
 func CLI(args []string) int {
         app := appEnv{}
         err := app.fromArgs(args)
@@ -428,7 +470,7 @@ func CLI(args []string) int {
         if err = app.run(); err != nil {
                 log.Fatal(err)
                 fmt.Fprintf(os.Stderr, "Runtime Error: %s\n", err)
-                return 2
+                return 1
         }
         return 0
 }
