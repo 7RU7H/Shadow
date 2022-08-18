@@ -14,16 +14,21 @@ import (
 
 
 //First Check any encoding by characteristics
-func checkEncoding(s string) {
+func checkEncoding(s string) (result string) {
         // Check if its Gzip
         if strings.Contains(s, '\\') {
                 decodeGzip(s)
+	}
+
 
 
         // Check if its Base64
         if //
         result, err = decodeBase64(s)
 
+	if strings.Contains(s, '  ') {
+		result = removeExcessWS(s)
+	}
 }
 
 func decodeGzip(s string) {
@@ -47,21 +52,23 @@ func decodeBase64(s string) (result string, err error) {
         return result, err
 }
 
+
 // Remove extra spaces
 func removeExcessWS(s string) string {
-        originalSize := len(s)-1
-        wsCount := strings.Count(s,' ')
-        resizeSize := originalSize - (wsCount/2)
-	builder := sitnrgs.Builder{}
-        //if checkEven(resizeSize) != true {
+	builder := strings.Builder{}
+	splitS := strings.Split(s, "")
+	sliceSize := len(splitS) - 1
 
-	result := initStrArray(resizeSize)
-	for i := 0; i <=originalSize; i++ {
-		if i > 0  && (string.Contains(slice[i], ' ' && string.Contains(slice[i-1], ' ') || !string.Contains(slice[1], ' ') { 
-			builder.WriteString(slice[i])
-               }
-        }
-        return builder.String() 
+	for i := 0; i <= sliceSize; i++ {
+		if !strings.Contains(splitS[i], " ") {
+			builder.WriteString(splitS[i])
+			if i != sliceSize && strings.Contains(splitS[i+1], " ") {
+				builder.WriteString(" ")
+			}
+		}
+
+	}
+	return builder.String()
 }
 
 // Change case to lower case
