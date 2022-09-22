@@ -16,15 +16,14 @@ import (
 	"sync"
 	"syscall"
 
-	"ninjashell/gc.go"
-	"ninjashell/tcp.go"
-	"ninjashell/udp.go"
-	"ninjashell/filetransfer.go"
-	"ninjashell/encrypt.go"
+	"client.go"
+	"listener.go"
+	"tls.go"
+	"handle.go"
 )
 
 func main() {
-	os.Exit(gc.CLI(os.Args[1:]))
+	os.Exit(handle.CLI(os.Args[1:]))
 }
 
 
