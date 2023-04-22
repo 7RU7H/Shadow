@@ -1,18 +1,10 @@
-# Shadow
+# Ninja
 
-Can't think of better name just yet so working title was ninjashell - and now Shadow is only slightly better...
+The original starting point that i want to be a module in Shadow
 
-Original just wanting a tcp/udp shell with the hope to pursue interesting protocols. QUIC has its faults and I am sure they will be resolved.
+Inspired and refactored from old versions of go netcat clones on github [go-netcat](https://github.com/vfedoroff/go-netcat/blob/master/main.go), [go-nc](https://github.com/opencoff/go-nc/blob/master/gonc.go) and [gocat](https://github.com/sumup-oss/gocat). Wanted to add more functionality like socat encryption and easy ncat file transfers, but in golang where the it can be ran on anything. I recently discover [xct](https://github.com/xct/xc) that actually works, which is awesome and has some seriously cool functionality. I highly recommend it, but I would want it in rust with the upcoming changes to telemetry. So this maybe become a rust shell.
 
-
-
-####  Ninja Module
-
-ninja a the tcp/udp  Golang Netcat/Socat/Ncat-like with file transfer, encrypted transfer and traffic without become a full blown C2, but the tool you would want see in a list of Tools in a C2.
-
-
-
-Inspired and refactored from old versions of go netcat clones on github [go-netcat](https://github.com/vfedoroff/go-netcat/blob/master/main.go), [go-nc](https://github.com/opencoff/go-nc/blob/master/gonc.go) and [gocat](https://github.com/sumup-oss/gocat). Wanted to add more functionality like socat encryption and easy ncat file transfers, but in golang where the it can be ran on anything. 
+## Ideas
 
 Ok a month on, been reading and researching a way and a few things came up that meant that the current design are bad for the long term:
 
@@ -20,29 +12,29 @@ Ok a month on, been reading and researching a way and a few things came up that 
 1. Researching more AV/IDS/IPS evasion techniques
 1. https://github.com/cheetz/c2
 1. Researching better Golang practice and project design like:
-	- Anything Project Discovery
-	- https://github.com/jpillora/chisel
-	- Regular application design best practices
- 
+        - Anything Project Discovery
+        - https://github.com/jpillora/chisel
+        - Regular application design best practices
+
 First researched a better way from The Hacker Playbook 2; TL DR - Build the Protocol
 
-Benefits being: TCP will be replace with QUIC at some point so might aswell jump big time on that bandwagon early 
+Benefits being: TCP will be replace with QUIC at some point so might aswell jump big time on that bandwagon early
 
-## Requirements:
-Be QUIC easily ready to QUIC compatibility with backward user - protocol compatible while being smart and using the same functions 
+#### Requirements:
+Be QUIC easily ready to QUIC compatibility with backward user - protocol compatible while being smart and using the same functions
 Bypass Firewalls
            - Onioning within a masquade
 
-Bypass IDS - Command variation with smart string variation 
+Bypass IDS - Command variation with smart string variation
            - Extendable with tech and times
 Make it fast and easy to fit with everyone elses automation - keep project alive
-Generate Client Executables - Researching 
-AV Evasion - Researching 
+Generate Client Executables - Researching
+AV Evasion - Researching
 Make a protocol that itself is onioned so that it hide within legitmate like QUIC, TCP, UDP etc Traffic so that you could still ssl, tls cert host like Socat - OR WHATEVER Quic standards I definately dont know about.
 Encrypted Traffic without Cert hadnling
 
 
-## OnionMask Protocol
+#### OnionMask Protocol
 ```
         Happy SOC team Traffic - Masquade
                         \
@@ -57,34 +49,34 @@ Encrypted Traffic without Cert hadnling
 Masquading - Legitimate Protocols are alway required, using them to piggyback a subprotocol
 Onioning Mimicry to embedded the Ninjashell protocol
 
-- Idea being to be very stealthy would be to Generate Drip traffic that would end up at the listener 
-Like every nth term bit is a part next key part to which seeding would produuce the same result 
-The Two castles problem is just solvable by the proof that detirministic seeding of pseudo randomness will alway produce the same randomness.  
+- Idea being to be very stealthy would be to Generate Drip traffic that would end up at the listener
+Like every nth term bit is a part next key part to which seeding would produuce the same result
+The Two castles problem is just solvable by the proof that detirministic seeding of pseudo randomness will alway produce the same randomness.
 
- 
-Jibberish Translation to find EXPECTED Encoding 
+
+Jibberish Translation to find EXPECTED Encoding
 Decryption/Encryption
 
 
-## Quic Research will probably take place after I finish OSCP,
+#### Quic Research will probably take place after I finish OSCP,
 **Dut** re-build everything so that framework is 'Masquade' (TCP, UDP,QUIC,etc) protocol-generic
 
-## Modern Firewall are smart and will get smarter with AI
+#### Modern Firewall are smart and will get smarter with AI
 Solution: Onioning and Masqurading within Legitimate Traffic and Protocols
-Long Term Solution: Aversarial AI - Firewall Rule sim VS Brutforcing SMARTLY ninjashell 
+Long Term Solution: Aversarial AI - Firewall Rule sim VS Brutforcing SMARTLY ninjashell
 
-## Make User-Automation friendly
+#### Make User-Automation friendly
 Solution be more like Nuclei than some of the older golang cli apps and actually be cli friendly
 Keep it simple and clean - it should still be just a shell with alot of hardcore tech
 
-## Command Evasion Client IDS
+#### Command Evasion Client IDS
 
 Solution:
 
 Layed with accepting potentially accepting base64 versions
 Command Variation Generator and inside the Ninjashell is a translator
 Seperate Binary like Msfvenom
-With logging to automate, help with reporting to make manual 
+With logging to automate, help with reporting to make manual
 
 The Main Binary - Checks if its base64/gzip -> convert that and/or convert malformed generated cmd string to regular argparser, then inits argparser stuff
 
@@ -95,7 +87,7 @@ For file transfer chunking and other encrypting and streaming data inside the ab
 
 ## Issues
 Hacking Go to like a malware dev to make the binaries small or somehow invent some sort of (or copy more like)
-drip feeding process that is similar to staged payload but more packet stealthy and bootstrapping.  
+drip feeding process that is similar to staged payload but more packet stealthy and bootstrapping.
 
 
 ## Author Notes
