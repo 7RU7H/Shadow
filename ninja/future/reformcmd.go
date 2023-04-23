@@ -1,4 +1,4 @@
-package ninjashell
+package ninja
 
 import (
         "strings"

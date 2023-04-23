@@ -1,4 +1,4 @@
-package ninjashell
+package ninja
 
 import (
         "errors"
@@ -9,10 +9,14 @@ import (
         "strconv"
         "strings"
         "time"
+
+	"server"
+	"client"
+	"packet"
 )
 
 type appEnv struct {
-        isListener      bool
+        isServer      bool
         isClient        bool
         sourcePort      string
         destinationPort string
@@ -23,7 +27,7 @@ type appEnv struct {
 }
 
 func (app *appEnv) setDefaultConfig() {
-        app.isListener = false
+        app.isServer = false
         app.isClient = false
         app.sourcePort = "0"
         app.destinationPort = "0"
@@ -67,16 +71,16 @@ func (app *appEnv) fromArgs(args []string) error {
         supportedShells := []string{"cmd.exe", "powershell.exe", "/bin/bash", "/bin/sh"}
 
         //Subcommands
-        listenerCommand := flag.NewFlagSet("-l", flag.ExitOnError)
+        serverCommand := flag.NewFlagSet("-l", flag.ExitOnError)
         clientCommand := flag.NewFlagSet("-c", flag.ExitOnError)
        
-	//Listener subcommand flags
-        listenerCommand.StringVar(&sourcePort, "-p", "0", "Source port")
-        listenerCommand.BoolVar(&isEncrypted, "-e", false, "Encryption")
-        listenerCommand.StringVar(&password, "-k", "", "Password is require for encryption")
-        listenerCommand.StringVar(&dstFilepath, "-f", "", "File path")
-        listenerCommand.BoolVar(&isUDP, "-u", false, "UDP listener, Does not support file transfer use -f subcommand on client ")
-        listenerCommand.BoolVar(&progressBar, "-b", false, "Optional progress bar to view file transfer progress")
+	//Server subcommand flags
+        serverCommand.StringVar(&sourcePort, "-p", "0", "Source port")
+        serverCommand.BoolVar(&isEncrypted, "-e", false, "Encryption")
+        serverCommand.StringVar(&password, "-k", "", "Password is require for encryption")
+        serverCommand.StringVar(&dstFilepath, "-f", "", "File path")
+        serverCommand.BoolVar(&isUDP, "-u", false, "UDP server, Does not support file transfer use -f subcommand on client ")
+        serverCommand.BoolVar(&progressBar, "-b", false, "Optional progress bar to view file transfer progress")
 
         //Client subcommand flags
         clientCommand.StringVar(&destinationPort, "-d", "0", "Destination port")
@@ -115,8 +119,8 @@ func (app *appEnv) fromArgs(args []string) error {
         //Check user input and store in appEnv
         switch args[1] {
         case "-l":
-                app.isListener = true
-                listenerCommand.Parse(args[2:])
+                app.isServer = true
+                serverCommand.Parse(args[2:])
                 app.sourcePort = sourcePort
                 testValidPortNum = strconv.Atoi(sourcePort)
                 app.isEncrypted = isEncrypted
@@ -138,9 +142,9 @@ func (app *appEnv) fromArgs(args []string) error {
                 os.Exit(1)
         }
 
-        if app.isListener {
+        if app.isServer {
                 if app.shellSpecifier != "" {
-                        return fmt.Errorf("Shell specifier is not supported for listener")
+                        return fmt.Errorf("Shell specifier is not supported for server")
                 }
                 if testValidPortNum > 0 || testValidPortNum < 65535 {
                         validPort = true
@@ -177,7 +181,7 @@ func (app *appEnv) fromArgs(args []string) error {
 
 func (app. *appEnv) buildAddressString() (string error) {
         builder := strings.Builder{}
-        if isListener {
+        if isServer {
                 builder.WRiteString(app.ipAddress,":",app.sourcePort)
         } else {
                 builder.WriteString(app.ipAddress, ":",app.destinationPort)
@@ -185,12 +189,16 @@ func (app. *appEnv) buildAddressString() (string error) {
         return builder.String()
 }
 
-//Select listener based on parameters provided
-func (app *appEnv) selectListener() error {
+//Select server based on parameters provided
+func (app *appEnv) selectServer() error {
+	server.CreateServer(app)
 }
+
+
 
 //Select client based on parameters provided
 func (app *appEnv) selectClient() error {
+	client.CreateClient(app)
 }
 
 
@@ -199,8 +207,8 @@ func (app *appEnv) run() error {
         //Switch based on command passed by user
         switch app.command {
                 case "-l":
-                        err = app.selectListener(); if err != nil {
-                                return fmt.Errorf("Error running listener: %s", err)
+                        err = app.selectServer(); if err != nil {
+                                return fmt.Errorf("Error running server: %s", err)
                         }
                 case "-c":
                         app.remoteAddress = buildAddressString()

@@ -1,6 +1,6 @@
-package ninjashell
+package ninja
 
-// The module is used by the ninjashell to encrypt traffic and decrypt traffic.
+// The module is used by the ninja to encrypt traffic and decrypt traffic.
 // Handling password and file encryption and decryption.
 // Password once verified at both end is cached in memory for the duration of the session
 // and is used for all subsequent traffic.

@@ -1,0 +1,3 @@
+Seperate functionality
+tls handled in tls.go
+no quic

@@ -1,4 +1,4 @@
-package ninjashell
+package ninja
 
 import (
         "context"
@@ -12,7 +12,6 @@ import (
         "log"
         "math/big"
 
-        "github.com/lucas-clemente/quic-go"
 )
 
 
@@ -37,6 +36,26 @@ func generateTLSConfig() *tls.Config {
         return &tls.Config{
                 Certificates: []tls.Certificate{tlsCert},
                 NextProtos:   []string{"quic-echo-example"},
+        }
+	// Create the certificate
+        certDER, err := x509.CreateCertificate(rand.Reader, &template, &template, &key.PublicKey, key)
+        if err != nil {
+                panic(err)
+        }
+
+        // Encode the private key and certificate in PEM format
+        keyPEM := pem.EncodeToMemory(&pem.Block{Type: "RSA PRIVATE KEY", Bytes: x509.MarshalPKCS1PrivateKey(key)})
+        certPEM := pem.EncodeToMemory(&pem.Block{Type: "CERTIFICATE", Bytes: certDER})
+
+        // Create a TLS certificate from the PEM-encoded data
+        tlsCert, err := tls.X509KeyPair(certPEM, keyPEM)
+        if err != nil {
+                panic(err)
+        }
+
+        // Return a TLS config using the certificate
+        return &tls.Config{
+                Certificates: []tls.Certificate{tlsCert},
         }
 }
 
