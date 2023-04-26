@@ -40,5 +40,5 @@ Ninja a the tcp/udp  Golang Netcat/Socat/Ncat-like with file transfer, encrypted
 
 #### Monolith -> Zigarhack
 
-C Server to implement HTTP(s), DNS, LDAP, Kerberos, etc - as modularly as possible in the hope if C dies and Zig replaces it that it will be converted to Zig
+C Server to implement FTPs, FTP, HTTP(s), DNS, LDAP, Kerberos, etc - as modularly as possible in the hope if C dies and Zig replaces it that it will be converted to Zig
 

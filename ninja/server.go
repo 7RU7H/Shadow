@@ -19,6 +19,7 @@ import (
 )
 
 
+
 func CreateServer() error {
 	HandleSpecification()
 }
@@ -39,9 +40,20 @@ func HandleSpecificationOS() error {
 
 }
 
+func HandleServerErrors() error {
+
+}
+
 // Nix Related Syscalls
 // Windows Related Syscall, DLL, etc
 
+func BindToSocket() error {
+
+}
+
+func ListenOnSocket() error {
+
+}
 
 func CreateSession() error {
 
