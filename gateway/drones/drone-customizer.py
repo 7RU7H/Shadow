@@ -4,7 +4,6 @@ class
 
 # Replace customVars
 
-
 replacable_customUploader
 replacable_customDownloader
 replacable_customListener 
@@ -39,6 +38,8 @@ def custom_Compile():
 
 def main():
 # Handle Args
+
+# Configuration File template
 
 # Copy drone.go
 
