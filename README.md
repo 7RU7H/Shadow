@@ -4,15 +4,14 @@ Can't think of better name just yet so working title was ninjashell - and now Sh
 
 Original just wanting a tcp/udp shell with the hope to pursue interesting protocols. QUIC has its faults and I am sure they will be resolved.
 
-I want this is too be a light-weight and entirely modular
-
+I want this is too be a light-weight and entirely modular and generally a pet project to try different languages and components. This will be slow burn for me to keep head in programming and 
 
 #### Gateway 
 
 C2 Teamserver with a simple golang client to tie all the modules together
 
 - Drones
-    - Drone customizer to automate building
+    - Python3 Drone customizer to automate building
 
 #### Cobwell Module
 
@@ -38,7 +37,6 @@ Ninja a the tcp/udp  Golang Netcat/Socat/Ncat-like with file transfer, encrypted
 
 - Note to self on wild ideas see [the remmnant ninja readme](ninja/NINJA-README.md)
 
-#### Monolith -> Zigarhack
+#### Monolith -> Zigarhack 
 
-C Server to implement FTPs, FTP, HTTP(s), DNS, LDAP, Kerberos, etc - as modularly as possible in the hope if C dies and Zig replaces it that it will be converted to Zig
-
+C Server to implement FTPs, FTP, HTTP(s), DNS, LDAP, Kerberos, etc - as modularly as possible in the hope if C dies and Zig replaces it that it will be converted to Zig 
