@@ -23,7 +23,7 @@ type  struct {
 // interface that handles the interfaces to createNewServer, makeServerListen, and closeServer
 // main interface passes *http.servers till closing
 
-// Functionality
+//  Functionality
 // 	Host pages
 // 	Download - FileServer
 // 	Upload -
