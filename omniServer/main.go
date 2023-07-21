@@ -111,15 +111,34 @@ func main() {
 	interface := "eth0"
 	vhost := "testwebserver.nvm"
 	isTLS := false
+	customCert := ""
 	listeningPort := 443 
 	ipAddress := "127.0.0.1"
 	tlsCert := "/path/to/cert"
 	uploadPath := "/path/to/upload"
+	serverCertPath := "/path/to/cert"
+	serverKeyPath :=  "/path/to/cert"
 
 	appStartTime := time.Now()
 	// CLI 
 	//banner := cli.Banner()
 	//fmt.Printf("\n%s\n", banner)
+	var userDefinedServerKeyPath string
+	var userDefinedServerCertPath string
+
+	// 0: Default 30
+	// 1: Randomised
+	// 2: Customised
+	var certDaysSettings int 
+	// If 2 requires != 0, 
+	var	userDefinedCertExpiryDays int
+	
+	var certExpiryDaysSeed string
+	var certExpiryDaysRangeLowerBound int 
+	var certExpiryDaysRangeUpperBound int
+	
+	var certExpiryDaysRand int
+
 
 	// MetaHander - to create, run, close servers - isTLS, vhost, interface, listeningPort, ipAddress
 	// Mux is a multiplexer to handle routes
@@ -145,7 +164,28 @@ func main() {
 		// HTTP	
 
 		// TLS
+		if customCert != "" {
+			serverCertPath = cli.UserDefinedServerCertPath
+			serverKeyPath = cli.UserDefinedServerKeyPath
+		} else {
+			switch certDaysSetting {
+			case: 0 // Default 30
+				tls.CreateTLSCertKeyPair(30)
+			case: 1 // randomised days
+				tls.CreateTLSCertKeyPair()
+			case: 2 // customised days
+				tls.CreateTLSCertKeyPair(userDefinedCertExpiryDays)
+			default:
+				// error
+
+			}
+		}
+
 		// If TLS server TLS certificate
+		err := http.ListenAndServeTLS(":443", serverCertPath, serverKeyPath, nil)
+    	if err != nil {
+      	  log.Fatal("ListenAndServe: ", err)
+    	}
 
 
 
