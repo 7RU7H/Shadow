@@ -29,6 +29,11 @@ type  struct {
 // 	Upload -
 // 	Save reponse to file
 
+// Manage servers
+	// Query logs
+	// Process memory etc
+	// 
+
 //  WebServer 
 
 // go routines

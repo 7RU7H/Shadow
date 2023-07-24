@@ -15,8 +15,16 @@ import (
 )
 
 type Server struct {
-
+	ServerType int // Integer reference for each - decimalise as in 0 - 9 is debug; 10 is webserver, 20 proxy, 30 capture - 11 is then an option for feature extension of a webserver
+	ServerID int
+	ServerName string
+	ServerInfo struct
 	TLSInfo struct
+}
+
+type ServerInfo struct {
+	mux &ServeMux
+
 }
 
 type TLSInfo struct {
@@ -123,6 +131,15 @@ func saveReqBodyFileHandler(w http.ResponseWriter, r *http.Request) error {
 	return nil
 }
 
+// Mux is a multiplexer to handle routes for Webserver
+func CreateDefaultWebServerMux() *ServerMux {
+	mux := http.NewServeMux()
+	// Setup routes
+	mux.HandleFunc("/upload", uploadFileHandler())
+	mux.HandleFunc("/download", downloadFileHandler())
+	mux.HandleFunc("/saveReqBody", saveReqBodyFileHandler())
+	return mux
+}
 
 
 
@@ -171,62 +188,62 @@ func main() {
 	// Sub type of server
 	// Create X server
 		// mux for handling requests
+	// ListeningAndServer
+	// CloseServer 
 
 
-	// Mux is a multiplexer to handle routes
-	mux := http.NewServeMux()
-	// Setup routes
-	mux.HandleFunc("/upload", uploadFileHandler())
-	mux.HandleFunc("/download", downloadFileHandler())
-	mux.HandleFunc("/saveReqBody", saveReqBodyFileHandler())
-
-	
+	// Define Mux first to then pass it in Context Creation
+	CreateDefaultWebServerMux()	
+	// Context creation
 	// Handle TLS certificate generation, custom usage
 	if isTLS {
-		manageTLSCertInit()
+		tls.manageTLSCertInit() // pass ??.TLSInfo ->
 	}
 	
+	
+
 
 	// Default - host a page
 	// Host main page
 
-	//
+	
 	// ListenAndServer either HTTP or HTTPS server
 	// HTTP
-	if !isTLS {
-	// goroutine this function
-	
+	// WILL NOT REQUIRE ListenAndServer() as Contexts will be used was just an idiot 
+	// go ListenAndServerWebServer()
+	if !isTLS { 
+	// goroutine this function	
 		// Better error handling - account for contexts, go routines, when it should return exit out of this block
         err := server.ListenAndServe()
         if errors.Is(err, http.ErrServerClosed) {
-                fmt.Printf("%s closed\n", serverID, err)
-				log.Fatal("%s closed\n", serverID, err)
+                fmt.Printf("%s closed\n", ServerID, err)
+				log.Fatal("%s closed\n", ServerID, err)
         } else if err != nil {
-                fmt.Printf("Error listening for %s: %s\n", serverID, err)
-				log.Fatal("Error listening for %s: %s\n", serverID, err)
+                fmt.Printf("Error listening for %s: %s\n", ServerID, err)
+				log.Fatal("Error listening for %s: %s\n", ServerID, err)
         } else {
-                log.Printf("%s is listening...\n", serverID)
-        }
-
-
-
-
+                log.Printf("%s is listening...\n", ServerID)
+				
+		}
+		// Context termination
 	} else {
 		// If HTTPS server
 		//serverStartTime := time.Now()
 		err := http.ListenAndServeTLS(listeningPort, serverCertPath, serverKeyPath, nil)
 		if errors.Is(err, http.ErrServerClosed) {
-                fmt.Printf("%s closed\n", serverID, err)
-				log.Fatal("%s closed\n", serverID, err)
+                fmt.Printf("%s closed\n", ServerID, err)
+				log.Fatal("%s closed\n", ServerID, err)
         } else if err != nil {
-                fmt.Printf("Error listening for %s: %s\n", serverID, err)
-				log.Fatal("Error listening for %s: %s\n", serverID, err)
+                fmt.Printf("Error listening for %s: %s\n", ServerID, err)
+				log.Fatal("Error listening for %s - ID %d: %s\n", ServerID, err)
         } else {
-                log.Printf("%s is listening...\n", serverID)
+                log.Printf("%s is listening...\n", ServerID)
 		}
+		// Context termination
 	}
 
 	// CloseServer
+	// Context termination
 
 	// CloseApplication
 	appTerminateTime := time.Now()
