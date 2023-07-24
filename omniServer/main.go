@@ -9,8 +9,23 @@ import (
 	"strconv"
 	"strings"
 	"time"
-	//cli.go
+	
+	omniServer/cli.go
+	omniServer/tls.go
 )
+
+type Server struct {
+
+	TLSInfo struct
+}
+
+type TLSInfo struct {
+	ServerCertPath string
+	ServerKeyPath string
+	CertExpiryDays int
+
+}
+
 
 // https://drstearns.github.io/tutorials/goweb/
 // https://tutorialedge.net/golang/go-file-upload-tutorial/U
@@ -108,13 +123,18 @@ func saveReqBodyFileHandler(w http.ResponseWriter, r *http.Request) error {
 	return nil
 }
 
+
+
+
 func main() {
 	// Testing values
 	//interface := "eth0"
 	vhost := "testwebserver.nvm"
 	isTLS := false
 	customCert := ""
-	listeningPort := 443
+	
+	var portRequested := 8443 // dummy CLI value
+	var listeningPort string
 	ipAddress := "127.0.0.1"
 	tlsCert := "/path/to/cert"
 	uploadPath := "/path/to/upload"
@@ -141,64 +161,68 @@ func main() {
 
 	var certExpiryDaysRand int
 
+	// Post CLI command checks
+
+	// check port in use
+	listeningPort = convPortNumber(portRequested)
+
 	// MetaHander - to create, run, close servers - isTLS, vhost, interface, listeningPort, ipAddress
+	// Type of server
+	// Sub type of server
+	// Create X server
+		// mux for handling requests
+
+
 	// Mux is a multiplexer to handle routes
 	mux := http.NewServeMux()
-
-	// Make TLS or HTTP server
-	// HTTP
-	if !isTLS {
-
-	} else {
-		// TLS
-		if customCert != "" {
-			serverCertPath = cli.UserDefinedServerCertPath
-			serverKeyPath = cli.UserDefinedServerKeyPath
-			log.Printf("Custom TLS Certificate used at: %s", serverCertPath)
-			log.Printf("Custom TLS Key used at: %s", serverKeyPath)
-		} else {
-			switch certDaysSetting {
-			case 0: // Default 30
-				err := tls.CreateTLSCertKeyPair(30)
-				//
-				log.Printf("TLS Certificate created with expiry of days: 30")
-			case 1: // randomised days
-				//
-				// ADD feature
-				randomExpiryDays := 0
-				err := tls.CreateTLSCertKeyPair(randomExpiryDays)
-				//
-				log.Printf("TLS Certificate created with expiry of days: %d", randomExpiryDays)
-			case 2: // customised days
-				err := tls.CreateTLSCertKeyPair(userDefinedCertExpiryDays)
-				//
-				log.Printf("TLS Certificate created with expiry of days: %d", userDefinedCertExpiryDays)
-			default:
-				// error
-
-			}
-		}
-	}
-
-	// Default - host a page
-	// Host main page
-
 	// Setup routes
 	mux.HandleFunc("/upload", uploadFileHandler())
 	mux.HandleFunc("/download", downloadFileHandler())
 	mux.HandleFunc("/saveReqBody", saveReqBodyFileHandler())
 
+	
+	// Handle TLS certificate generation, custom usage
+	if isTLS {
+		manageTLSCertInit()
+	}
+	
+
+	// Default - host a page
+	// Host main page
+
 	//
 	// ListenAndServer either HTTP or HTTPS server
 	// HTTP
 	if !isTLS {
+	// goroutine this function
+	
+		// Better error handling - account for contexts, go routines, when it should return exit out of this block
+        err := server.ListenAndServe()
+        if errors.Is(err, http.ErrServerClosed) {
+                fmt.Printf("%s closed\n", serverID, err)
+				log.Fatal("%s closed\n", serverID, err)
+        } else if err != nil {
+                fmt.Printf("Error listening for %s: %s\n", serverID, err)
+				log.Fatal("Error listening for %s: %s\n", serverID, err)
+        } else {
+                log.Printf("%s is listening...\n", serverID)
+        }
+
+
+
 
 	} else {
 		// If HTTPS server
 		//serverStartTime := time.Now()
-		err := http.ListenAndServeTLS(":443", serverCertPath, serverKeyPath, nil)
-		if err != nil {
-			log.Fatal("ListenAndServe Failed at %s -", time.Now(), err)
+		err := http.ListenAndServeTLS(listeningPort, serverCertPath, serverKeyPath, nil)
+		if errors.Is(err, http.ErrServerClosed) {
+                fmt.Printf("%s closed\n", serverID, err)
+				log.Fatal("%s closed\n", serverID, err)
+        } else if err != nil {
+                fmt.Printf("Error listening for %s: %s\n", serverID, err)
+				log.Fatal("Error listening for %s: %s\n", serverID, err)
+        } else {
+                log.Printf("%s is listening...\n", serverID)
 		}
 	}
 

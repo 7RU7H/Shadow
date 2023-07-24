@@ -45,3 +45,35 @@ func CreateTLSCertKeyPair(days int) error {
 
 	return nil
 }
+
+// Needs to pass tlsInfo Struct that is nested in Sever struct
+func (t *TLSInfo) manageTLSCertInit() error {
+	if customCert != "" {
+		t.serverCertPath = cli.UserDefinedServerCertPath
+		t.serverKeyPath = cli.UserDefinedServerKeyPath
+		log.Printf("Custom TLS Certificate used at: %s", serverCertPath)
+		log.Printf("Custom TLS Key used at: %s", t.serverKeyPath)
+	} else {
+		switch certDaysSetting {
+		case 0: // Default 30
+			err := CreateTLSCertKeyPair(30)
+			t.CertExpiryDays = 30
+			log.Printf("TLS Certificate created with expiry of days: 30")
+		case 1: // randomised days
+			// NOT IMPLEMENTED
+			// ADD feature
+			randomExpiryDays := 0
+			err := CreateTLSCertKeyPair(randomExpiryDays)
+			t.CertExpiryDays = randomExpiryDays
+			log.Printf("TLS Certificate created with expiry of days: %d", randomExpiryDays)
+		case 2: // customised days
+			err := CreateTLSCertKeyPair(userDefinedCertExpiryDays)
+			t.CertExpiryDays = userDefinedCertExpiryDays
+			log.Printf("TLS Certificate created with expiry of days: %d", userDefinedCertExpiryDays)
+		default:
+			// error
+
+		}
+	}
+	return
+}

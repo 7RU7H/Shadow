@@ -45,6 +45,7 @@ type  struct {
 //  ProxyServer - Receive from an address and port and send to a address and port
 	// -C capture traffic, log and save to file
 
+	// https://gobyexample.com/channels - channels to pass data
 // Login form to interactive CLI 
 
 type Server struct {
@@ -73,7 +74,6 @@ func (s *Server) createWebServer(portNumber int, serverAddr string) (*http.Serve
 	return httpServer, ctx, cancelCtx
 }
 
-// goroutine this function
 func listenAndServe(server *http.Server, serverName string, ctx context.Context, cancelCtx context.CancelFunc) error {
 
 	err := server.ListenAndServe()
