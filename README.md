@@ -4,7 +4,23 @@ Can't think of better name just yet so working title was ninjashell - and now Sh
 
 Original just wanting a tcp/udp shell with the hope to pursue interesting protocols. QUIC has its faults and I am sure they will be resolved.
 
-I want this is too be a light-weight and entirely modular and generally a pet project to try different languages and components. This will be slow burn for me to keep head in programming and 
+I want this is too be a light-weight and entirely modular and generally a pet project to try different languages and components. This will be slow burn for me to keep my head in programming 
+
+#### omniServer
+
+Attempt to be a the "best in slot" web server for:
+- Uploading to
+- Download from
+- Sending data and saving to a file
+
+To define BiS:
+- It is Golang - therefore most platforms can run it 
+- CLI for multiple servers using golang's `context`s
+- Memory arenas for lightless weight performance
+
+
+
+
 
 #### Gateway 
 
