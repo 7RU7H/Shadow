@@ -31,15 +31,10 @@ type TLSInfo struct {
 	ServerCertPath string
 	ServerKeyPath string
 	CertExpiryDays int
-
 }
 
 
-// https://drstearns.github.io/tutorials/goweb/
-// https://tutorialedge.net/golang/go-file-upload-tutorial/U
-// https://medium.com/@harisshafiq08/file-upload-server-in-golang-1db6f888fb47
-// https://www.digitalocean.com/community/tutorials/how-to-make-an-http-server-in-go
-// https://www.digitalocean.com/community/tutorials/how-to-use-contexts-in-go
+
 
 // Upload file - filename
 func uploadFileHandler(w http.ResponseWriter, r *http.Request) error {
@@ -261,6 +256,13 @@ func convPortNumber(portNumber int) string {
 	return listeningPort
 }
 
+// Build and improve
+func checkError(err error) {
+	if err != nil {
+			log.Fatal(err)
+	}
+}
+
 func checkFileExists(path string) (bool error) {
 	_, err := os.Stat(path)
 	if err == nil {
@@ -272,4 +274,22 @@ func checkFileExists(path string) (bool error) {
 		return false, err
 	}
 	return true, nil
+}
+
+func checkValidIP(ip string) bool {
+	if ip == "" {
+			return false
+	}
+	checkIP := strings.Split(ip, ".")
+	if len(checkIP) != 4 {
+			return false
+	}
+	for _, ip := range checkIP {
+			if octet, err := strconv.Atoi(ip); err != nil {
+					return false
+			} else if octet < 0 || octet > 255 {
+					return false
+			}
+	}
+	return true
 }
