@@ -112,7 +112,7 @@ func RecieveStdIn() error {
 	return nil
 }
 
-func initialiseConsole() {
+func InitialiseConsole() error {
 
 }
 

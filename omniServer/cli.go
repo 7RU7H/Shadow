@@ -36,8 +36,13 @@ func (app *AppEnv) selectServer() {
 
 }
 
-func (app *AppEnv) selectConsole() {
+func (app *AppEnv) selectConsole() error {
+	err := console.InitialiseConsole()
+	if err != nil {
 
+		return err
+	}
+	return nil
 }
 
 func (app *AppEnv) run() error {
@@ -55,7 +60,7 @@ func (app *AppEnv) run() error {
 		}
 	default:
 		flag.Usage()
-		os.Exit(1)
+		os.Exit()
 	}
 	return nil
 }
