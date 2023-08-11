@@ -112,21 +112,25 @@ func downloadFileHandler(w http.ResponseWriter, r *http.Request) error {
 	return nil
 }
 
-// Save Body - filename, data
 func saveReqBodyFileHandler(w http.ResponseWriter, r *http.Request) error {
-
-	body, err := ioutil.ReadAll(r.Body)
+	builder := strings.Builder()
+	startTime := time.Now()
+	builder.WriteString(os.TempDir() + "/" + strings.ReplaceAll(r.RemoteAddr, ".", "-") + "-T-" + strconv.Itoa(int(time.Now().Unix())))
+	filepath :=	builder.Write()
+	err := os.Create(filepath,  0644)
 	if err != nil {
-		// ioutil unable to read requeset body
+		log.Fatal(err)
 		return err
-	} else {
-		startTime := time.Now()
-		// filename
-		// create file
-		// write to file
-		// close file
 	}
+	err := io.Copy(filepath, r.Body)
+	if err != nil {
+		log.Fatal(err)
+		return err
+	}
+	defer f.Close()
 	endTime := time.Now()
+	// Log file and time
+	builder.Flush()
 	return nil
 }
 
@@ -190,6 +194,7 @@ func main() {
 	var certExpiryDaysRand int
 
 	// Post CLI command checks
+	// tempDir := //set to linux /tmp/ or Windows\Temp 
 
 
 	// Check Server Addr 
