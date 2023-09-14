@@ -6,6 +6,11 @@ Original just wanting a tcp/udp shell with the hope to pursue interesting protoc
 
 I want this is too be a light-weight and entirely modular and generally a pet project to try different languages and components. This will be slow burn for me to keep my head in programming 
 
+
+#### AB0m1N4Bl3
+
+As an reason to learn Malware Dev, Analysis and C/C++ I decide to collect code snippet techniques to then patchwork my way to actually understanding the three. This is neither good, but will hopeful be educational for me and itch in the back of my mind to remind me to work on this.
+
 #### omniServer
 
 Attempt to be a the "best in slot" web server for:

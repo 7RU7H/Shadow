@@ -25,28 +25,33 @@ import (
 // - initialisation of array to make ID database - ID need negative space for stopped servers
 // 
 
+// Are negative ID is a good way of managing this why not flags
+//
+       
+// 
+// Creation to termination 
+// Memory Arenas
 
-type IDdatabase struct {
+// 
+// IDs
+// Memory Arenas 
 
-}
-
-currentDB := IDdatabase{
 		
-}
 
 // metahandler.go
 // X-server: web-server.go, proxy-server.go
 type Server struct {
         ServerType int // Integer reference for each - decimalise as in 0 - 9 is debug; 10 is webserver, 20 proxy, 30 capture - 11 is then an option for feature extension of a webserver
         ServerID int // 0 ID is temporary ID till checks, negative digits are stopped server IDs 
-        ServerName string
         ServerInfo struct
         TLSInfo struct
 }
 
 type ServerInfo struct {
         mux &ServeMux
-
+        status int
+        hostnames []string
+        totalHostnames int
 }
 
 type TLSInfo struct {
@@ -80,7 +85,6 @@ func (d *IDdatabase) SetIDToNegative(id int) (error) {
 
 
 func (s *Server) CreateServer() (error)  {
-	StoppedIDCheck := 0 - s.ServerID  
 	if CheckAvaliableIDs(s.ServerID) || CheckAvaliableIDs() {
 		// ID in use
 	}
@@ -113,15 +117,6 @@ func (s *Server) CloseServer() (error)  {
 		// Error no server ID to
 	}
 }
-       
-// MetaHander - to create, run, close servers - isTLS, vhost, interface, listeningPort, ipAddress
-// Type of server
-// Sub type of server
-// Create X server
-// mux for handling requests
-// ListeningAndServer
-// CloseServer
-
 
 // Upload file - filename
 func uploadFileHandler(w http.ResponseWriter, r *http.Request) error {
