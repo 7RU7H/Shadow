@@ -20,6 +20,7 @@ import (
 //
 // (NAME OF CONCEPT THAT MANAGES) -> server1,server2,...
 // Seperation of the methods as I am double server and IDdatabase
+// X-server: web-server.go, proxy-server.go
 // CURRENT IDEA Database needs to be:
 // - part of larger struct that: map[string](pointer) points to Server structs, ID database etc 
 // - initialisation of array to make ID database - ID need negative space for stopped servers
@@ -34,12 +35,10 @@ import (
 
 // 
 // IDs
-// Memory Arenas 
-
+// Memory Arenas and how.. 
+// 
 		
 
-// metahandler.go
-// X-server: web-server.go, proxy-server.go
 type Server struct {
         ServerType int // Integer reference for each - decimalise as in 0 - 9 is debug; 10 is webserver, 20 proxy, 30 capture - 11 is then an option for feature extension of a webserver
         ServerID int // 0 ID is temporary ID till checks, negative digits are stopped server IDs 
@@ -49,15 +48,16 @@ type Server struct {
 
 type ServerInfo struct {
         mux &ServeMux
-        status int
+       	status int
         hostnames []string
         totalHostnames int
 }
 
-type TLSInfo struct {
-        ServerCertPath string
-        ServerKeyPath string
-        CertExpiryDays int
+
+type TLSInfo struct { // passed by application as a []string 0 is free just need to make sure I cover all tls properties
+        ServerCertPath string // 1 
+        ServerKeyPath string // 2
+        CertExpiryDays int // 3
 }
 
 // manager/handler
@@ -65,57 +65,77 @@ type TLSInfo struct {
 
 
 // 0 ID is set for all initialing servers till checks
-func (s *Server) InitServerStruct(isTLS bool, userTLS []string) (error) {
+func (s *Server) InitServerStruct(hasTLS, hasHosts  bool, argsServerInfo, fromArgsTlsInfo []string) (error) {
+	//  
+	//
+	//
+	tls := TLSInfo{}
+	if hasTLS {
+		checkCertPath, err := util.CheckFileExists(fromArgsTlsInfo[1]) 
+		if !checkCertPath {
+			//
+			return err
+		} else {
+			tls.ServerCertPath = fromArgsTlsInfo[1]
+		}
+		checkKeyPath, err := util.CheckFileExists(fromArgsTlsInfo[2])
+		if !checkKeyPath {
+			//
+			return err
+		} else {
+			tls.ServerKeyPath = fromArgsTlsInfo[2]
+
+		}
+        	tls.CertExpiryDays = fromArgsTlsInfo[3]
+		s.TLSInfo = tls
+	} else { 
+		tls.ServerCertPath = "none"
+		tls.ServerKeyPath = "none"
+        	tls.CertExpiryDays = -1
+		s.TLSInfo = tls
+	}
+	
 	s.ServerID = 0
 
-	// TLS 
-	tls := TLSInfo{}
-	s.TLSInfo = tls
-}
-
-func (d *IDdatabase) CheckAvaliableIDs(id int) (error) {
-	
-}
-
-// Used to managed stopped server to either restart entirely or unpause 
-func (d *IDdatabase) SetIDToNegative(id int) (error) {
+	ServerInfo {
+		status = 0,
+		// hostnames =  
+		// func () if !hasHosts { hostname = "" } else { hostnameList := fromArgsServerInfo[INDEX] }
+		// 
+	}
 	
 }
 
 
+// ConfigServer?
+// OPcode = modify Info,  
+func ( *) ConfigServer(s *Server) (error)  {
+	switch s.ServerType {
+	case 10: // DefaultWebServer
+		// By s.ServerID, OPcode?
+	default:
+		if s.ServerType < 10 {
+		// Debug ServerType value
+		}
 
-func (s *Server) CreateServer() (error)  {
-	if CheckAvaliableIDs(s.ServerID) || CheckAvaliableIDs() {
-		// ID in use
-	}
-
-}
-
-func (s *Server,) StartServer() (error)  {
-	if !CheckAvaliableIDs(s.ServerID) {
-	
-		// Error no server ID to
-	}
-}
-
-func (s *Server) StopServer() (error)  {
-	if !CheckAvaliableIDs(s.ServerID) {
-		// Error no server ID to
+		// Invalid server type
 	}
 }
 
-func (s *Server) RestartServer() (error)  {
-	if !CheckAvaliableIDs(s.ServerID) {
-	
-		// Error no server ID to
-	}
+func ( *) StartServer(s *Server) (error)  {
+	//s.ServerID
 }
 
-func (s *Server) CloseServer() (error)  {
-	if !CheckAvaliableIDs(s.ServerID) {
-	
-		// Error no server ID to
-	}
+func ( *) StopServer(s *Server) (error)  {
+	//s.ServerID 
+}
+
+func ( *) RestartServer(s *Server) (error)  {
+	//s.ServerID
+}
+
+func ( *) CloseServer(s *Server) (error)  {
+	//s.ServerID
 }
 
 // Upload file - filename
