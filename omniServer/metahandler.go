@@ -38,34 +38,41 @@ import (
 // Memory Arenas and how.. 
 // 
 		
-
 type Server struct {
         ServerType int // Integer reference for each - decimalise as in 0 - 9 is debug; 10 is webserver, 20 proxy, 30 capture - 11 is then an option for feature extension of a webserver
-        ServerID int // 0 ID is temporary ID till checks, negative digits are stopped server IDs 
+        ServerID int // 0 ID is temporary ID till checks, negative digits are stopped server IDs
+        ServerWithCtx *http.Server
+        Ctx Context
+        CancelCtx CancelFunc
+        Mux &ServeMux
         ServerInfo struct
         TLSInfo struct
+        NewProc bool
+        ProcInfo struct
+}
+
+// For if Server is required to be run as a new process
+type ProcInfo struct {
+        PID int
+        UID int
 }
 
 type ServerInfo struct {
-        mux &ServeMux
-       	status int
-        hostnames []string
-        totalHostnames int
+        Status int
+        Hostnames []string
+        TotalHostnames int
+        ListeningPort int
+        ServerAddr string
 }
 
-
-type TLSInfo struct { // passed by application as a []string 0 is free just need to make sure I cover all tls properties
-        ServerCertPath string // 1 
-        ServerKeyPath string // 2
-        CertExpiryDays int // 3
+type TLSInfo struct {
+        ServerCertPath string
+        ServerKeyPath string
+        CertExpiryDays int
 }
-
-// manager/handler
-// server 
-
 
 // 0 ID is set for all initialing servers till checks
-func (s *Server) InitServerStruct(hasTLS, hasHosts  bool, argsServerInfo, fromArgsTlsInfo []string) (error) {
+func (s *Server) InitServerStruct(hasTLS, hasHosts, newProc bool, argsServerInfo, fromArgsTlsInfo []string) (error) {
 	//  
 	//
 	//
@@ -106,6 +113,67 @@ func (s *Server) InitServerStruct(hasTLS, hasHosts  bool, argsServerInfo, fromAr
 	
 }
 
+func (s *Server) CreateServer() (error)  {
+        if CheckAvaliableIDs(s.ServerID) || CheckAvaliableIDs() {
+                // ID in use
+        }
+        // ServerType == Integer reference for each - decimalise as in 0 - 9 is debug; 10 is webserver, 20 proxy, 30 capture - 11 is then an option for feature extension of a webserver
+        switch s.ServerType {
+                case 10: // HTTP Server
+                        s.CreateWebServer()
+                case 11: // HTTPS Server
+                        // Handle TLS certificate generation, custom usage
+                        tls.manageTLSCertInit() // pass ??.TLSInfo ->
+                        s.CreateWebServer()
+                default:
+                        if s.ServerType <= 9 {  // Debug ServerType value
+		        }
+                        // Incorrect s.ServerType
+
+        }
+
+}
+
+func (s *Server) CreateWebServer() (error) {
+        // Define Mux first to then pass it in Context Creation
+        s.Mux = CreateDefaultWebServerMux()
+        // Context creation
+        // Assigned to a struct!
+        s.ServerWithCtx, s.Ctx, s.CancelCtx = InitServerContext(s.ServerInfo.ListeningPort, s.ServerInfo.ServerAddr, s.Mux)
+        return nil
+}
+
+//
+func (s *Server) StartServer() (error)  {
+        if !CheckAvaliableIDs(s.ServerID) {
+
+                // Error no server ID to
+        }
+
+        if !s.NewProc {
+
+
+        } else {
+        // Create new process
+        TestProcInfo := ProcInfo{}
+        // Check errors or assign
+        s.ProcInfo = TestProcInfo
+        }
+
+        if errors.Is(err, http.ErrServerClosed) {
+                fmt.Printf("%s closed\n", ServerID, err)
+                log.Fatal("%s closed\n", ServerID, err)
+                return err
+        } else if err != nil {
+                fmt.Printf("Error listening for %s: %s\n", ServerID, err)
+                log.Fatal("Error listening for %s - ID %d: %s\n", ServerID, err)
+                return err
+        } else {
+                log.Printf("%s is listening...\n", ServerID)
+                return err
+        }
+
+}
 
 // ConfigServer?
 // OPcode = modify Info,  
@@ -122,21 +190,92 @@ func ( *) ConfigServer(s *Server) (error)  {
 	}
 }
 
-func ( *) StartServer(s *Server) (error)  {
-	//s.ServerID
+// BIG REWRITE:
+        // Seperate TLS and nonTLS as functions that then are the below go routine,
+        // For ServerID, serverCertPath, serverKeyPath
+        go func(server *http.Server, ctx Context, cancelCtx CancelFunc) error {
+
+                // ListenAndServer either HTTP or HTTPS server
+                // HTTP
+                // WILL NOT REQUIRE ListenAndServer() as Contexts will be used was just an idiot
+                // go ListenAndServerWebServer()
+                if !isTLS {
+                // goroutine this function
+                        // Better error handling - account for contexts, go routines, when it should return exit out of this block
+                        err := server.ListenAndServe()
+                        if errors.Is(err, http.ErrServerClosed) {
+                                        fmt.Printf("%s closed\n", ServerID, err)
+                                        log.Fatal("%s closed\n", ServerID, err)
+                                        return err
+                        } else if err != nil {
+                                        fmt.Printf("Error listening for %s: %s\n", ServerID, err)
+                                        log.Fatal("Error listening for %s: %s\n", ServerID, err)
+                                        return err
+                        } else {
+                                        log.Printf("%s is listening...\n", ServerID)
+                                        return err
+                        }
+                        cancelCtx()
+                } else {
+                        // If HTTPS server
+                        //serverStartTime := time.Now()
+                        err := http.ListenAndServeTLS(listeningPort, serverCertPath, serverKeyPath, nil)
+                        if errors.Is(err, http.ErrServerClosed) {
+                                        fmt.Printf("%s closed\n", ServerID, err)
+                                        log.Fatal("%s closed\n", ServerID, err)
+                                        return err
+                        } else if err != nil {
+                                        fmt.Printf("Error listening for %s: %s\n", ServerID, err)
+                                        log.Fatal("Error listening for %s - ID %d: %s\n", ServerID, err)
+                                        return err
+                        } else {
+                                        log.Printf("%s is listening...\n", ServerID)
+                                        return err
+                        }
+                        cancelCtx()
+                }
+
+                return nil
+        }()
+
+
+
+// Pause server, retain memory and does not deallocate
+func (s *Server) StopServer() (error)  {
+        if !CheckAvaliableIDs(s.ServerID) {
+                // Error no server ID to
+        }
 }
 
-func ( *) StopServer(s *Server) (error)  {
-	//s.ServerID 
+// What does restart mean and why? - Recreate Context and reassign memory etc
+func (s *Server) RestartServer() (error)  {
+        if !CheckAvaliableIDs(s.ServerID) {
+
+                // Error no server ID to
+        }
 }
 
-func ( *) RestartServer(s *Server) (error)  {
-	//s.ServerID
+// CloseServer
+func (s *Server) CloseServer() (error)  {
+        if !CheckAvaliableIDs(s.ServerID) {
+                // Error no server ID to
+
+        }
+
+        // Context termination
+        s.CancelCtx()
+        <-s.Ctx.Done()
+        ServerTerminationTime := time.Now()
+        // Checks on termination
+
+        return ServerTerminationTime, time.Now()
 }
 
-func ( *) CloseServer(s *Server) (error)  {
-	//s.ServerID
-}
+
+// manager/handler
+// server 
+
+
 
 // Upload file - filename
 func uploadFileHandler(w http.ResponseWriter, r *http.Request) error {
@@ -254,75 +393,3 @@ func InitServerContext(lportString, keyServerAddr string, srvMux *ServerMux)  (*
         }
         return server, ctx, cancelCtx, nil
 }
-
-
-
-
-
-        // Handle TLS certificate generation, custom usage
-        if isTLS {
-                tls.manageTLSCertInit() // pass ??.TLSInfo ->
-        }
-
-        // Define Mux first to then pass it in Context Creation
-        testMux := CreateDefaultWebServerMux()
-        // Context creation
-        // Assigned to a struct!
-        serverWithCtx, ctx, cancelCtx := InitServerContext(listeningPort, serverAddr, testMux)
-
-
-
-func BIGREWRITEOCLOCK(dingus and wingus) {
-        // BIG REWRITE:
-        // Seperate TLS and nonTLS as functions that then are the below go routine,
-        // For ServerID, serverCertPath, serverKeyPath
-        go func(server *http.Server, ctx Context, cancelCtx CancelFunc) error {
-
-                // ListenAndServer either HTTP or HTTPS server
-                // HTTP
-                // WILL NOT REQUIRE ListenAndServer() as Contexts will be used was just an idiot
-                // go ListenAndServerWebServer()
-                if !isTLS {
-                // goroutine this function
-                        // Better error handling - account for contexts, go routines, when it should return exit out of this block
-                        err := server.ListenAndServe()
-                        if errors.Is(err, http.ErrServerClosed) {
-                                        fmt.Printf("%s closed\n", ServerID, err)
-                                        log.Fatal("%s closed\n", ServerID, err)
-                                        return err
-                        } else if err != nil {
-                                        fmt.Printf("Error listening for %s: %s\n", ServerID, err)
-                                        log.Fatal("Error listening for %s: %s\n", ServerID, err)
-                                        return err
-                        } else {
-                                        log.Printf("%s is listening...\n", ServerID)
-                                        return err
-                        }
-                        cancelCtx()
-                } else {
-                        // If HTTPS server
-                        //serverStartTime := time.Now()
-                        err := http.ListenAndServeTLS(listeningPort, serverCertPath, serverKeyPath, nil)
-                        if errors.Is(err, http.ErrServerClosed) {
-                                        fmt.Printf("%s closed\n", ServerID, err)
-                                        log.Fatal("%s closed\n", ServerID, err)
-                                        return err
-                        } else if err != nil {
-                                        fmt.Printf("Error listening for %s: %s\n", ServerID, err)
-                                        log.Fatal("Error listening for %s - ID %d: %s\n", ServerID, err)
-                                        return err
-                        } else {
-                                        log.Printf("%s is listening...\n", ServerID)
-                                        return err
-                        }
-                        cancelCtx()
-                }
-
-                return nil
-        }()
-
-        <-ctx.Done()
-        // CloseServer
-        // Context termination
-}
-
