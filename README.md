@@ -11,21 +11,6 @@ I want this is too be a light-weight and entirely modular and generally a pet pr
 
 As an reason to learn Malware Dev, Analysis and C/C++ I decide to collect code snippet techniques to then patchwork my way to actually understanding the three. This is neither good, but will hopeful be educational for me and itch in the back of my mind to remind me to work on this.
 
-#### omniServer
-
-Attempt to be a the "best in slot" web server for:
-- Uploading to
-- Download from
-- Sending data and saving to a file
-
-To define BiS:
-- It is Golang - therefore most platforms can run it 
-- CLI for multiple servers using golang's `context`s
-- Memory arenas for lightless weight performance
-
-
-
-
 
 #### Gateway 
 
@@ -52,12 +37,31 @@ Objectives:
 - Improve stealth at this endpoint not at LKM Rootkit level
 - Hopeful Process injection and migration one distant dayi
 
+#### Monolith -> Zigarhack 
+
+C Server to implement FTPs, FTP, HTTP(s), DNS, LDAP, Kerberos, etc - as modularly as possible in the hope if C dies and Zig replaces it that it will be converted to Zig 
+
 ####  Ninja Module
 
 Ninja a the tcp/udp  Golang Netcat/Socat/Ncat-like with file transfer, encrypted transfer and traffic that is a light-weight as possible. I may end up becoming a rust or zig shell given Golang Telemetry
 
 - Note to self on wild ideas see [the remmnant ninja readme](ninja/NINJA-README.md)
 
-#### Monolith -> Zigarhack 
+#### omniServer
 
-C Server to implement FTPs, FTP, HTTP(s), DNS, LDAP, Kerberos, etc - as modularly as possible in the hope if C dies and Zig replaces it that it will be converted to Zig 
+Attempt to be a the "best in slot" web server for:
+- Uploading to
+- Download from
+- Sending data and saving to a file
+
+To define BiS:
+- It is Golang - therefore most platforms can run it 
+- CLI for multiple servers using golang's `context`s
+- Memory arenas for lightless weight performance
+
+#### Perspectishells
+
+A set of abmonation-like mash up of webshell from respective language used to understand and learn more about said languages. Beware I will use ChatGTP, because I not good at webshell languages - You have been warned. Each - to keep with the unimaginative naming convention of most of this entire repository with be:
+- cmd.EXT
+
+All webshell I was inspired and stole code from will be credited
