@@ -23,7 +23,7 @@ func CheckError(err error) {
 	}
 }
 
-func CheckFileExists(path string) (bool error) {
+func CheckFileExists(path string) (bool, error) {
 	_, err := os.Stat(path)
 	if err == nil {
 		log.Fatal(err)

@@ -1,4 +1,4 @@
-module github/7ru7h/omniServer
+module github.com/7ru7h/Shadow/omniServer
 
 go 1.20
 

@@ -10,10 +10,10 @@ import (
         "strings"
         "time"
 
-        // omniServer/cli.go
-        // omniServer/console.go
-        omniServer/tls.go
-	omniServer/util.go
+        "github.com/7ru7h/Shadow/omniServer/cli.go"
+        "github.com/7ru7h/Shadow/omniServer/console.go"
+        "github.com/7ru7h/Shadow/omniServer/tls.go"
+	"github.com/7ru7h/Shadow/omniServer/util.go"
 )
 
 //
@@ -44,11 +44,11 @@ type Server struct {
         ServerWithCtx *http.Server
         Ctx Context
         CancelCtx CancelFunc
-        Mux &ServeMux
-        ServerInfo struct
-        TLSInfo struct
+        Mux *ServerMux
+        ServerInfo ServerInfo
+        TLSInfo TLSInfo
         NewProc bool
-        ProcInfo struct
+        ProcInfo ProcInfo
 }
 
 // For if Server is required to be run as a new process
@@ -104,8 +104,11 @@ func (s *Server) InitServerStruct(hasTLS, hasHosts, newProc bool, argsServerInfo
 	
 	s.ServerID = 0
 
+        //EvaluateHostnames return len(arr)
 	ServerInfo {
-		status = 0,
+		Status = 0,
+                Hostnames = ,
+                TotalHostnames = len()-1
 		// hostnames =  
 		// func () if !hasHosts { hostname = "" } else { hostnameList := fromArgsServerInfo[INDEX] }
 		// 

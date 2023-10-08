@@ -37,7 +37,7 @@ func (app *AppEnv) selectServer() {
 }
 
 func (app *AppEnv) selectConsole() error {
-	err := console.InitialiseConsole()
+	err := Console.InitialiseConsole()
 	if err != nil {
 
 		return err
