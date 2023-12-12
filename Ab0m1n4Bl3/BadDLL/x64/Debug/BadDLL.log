@@ -1,0 +1,108 @@
+﻿  dllmain.c
+C:\Users\white\source\repos\BadDLL\dllmain.c(12,9): warning C4013: 'EnableDebugConsole' undefined; assuming extern returning int
+C:\Users\white\source\repos\BadDLL\dllmain.c(13,9): warning C4013: 'RunMalware' undefined; assuming extern returning int
+  GetModuleHandle.c
+C:\Users\white\source\repos\BadDLL\Structs.h(12,37): warning C4091: 'typedef ': ignored on left of 'PVOID' when no variable is declared
+C:\Users\white\source\repos\BadDLL\Structs.h(16,16): error C2373: 'PPS_POST_PROCESS_INIT_ROUTINE': redefinition; different type modifiers
+C:\Users\white\source\repos\BadDLL\Structs.h(14,15): message : see declaration of 'PPS_POST_PROCESS_INIT_ROUTINE'
+C:\Users\white\source\repos\BadDLL\Structs.h(21,2): error C2061: syntax error: identifier 'UNICODE_STRING'
+C:\Users\white\source\repos\BadDLL\Structs.h(22,17): error C2061: syntax error: identifier 'CommandLine'
+C:\Users\white\source\repos\BadDLL\Structs.h(22,17): error C2059: syntax error: ';'
+C:\Users\white\source\repos\BadDLL\Structs.h(23,1): error C2059: syntax error: '}'
+C:\Users\white\source\repos\BadDLL\Structs.h(44,2): error C2061: syntax error: identifier 'PPEB_LDR_DATA'
+C:\Users\white\source\repos\BadDLL\Structs.h(50,1): error C2059: syntax error: '}'
+C:\Users\white\source\repos\BadDLL\Structs.h(76,28): error C2011: '_LIST_ENTRY': 'struct' type redefinition
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\um\winnt.h(1170,16): message : see declaration of '_LIST_ENTRY'
+C:\Users\white\source\repos\BadDLL\GetModuleHandle.c(9,7): error C2065: 'PPEB': undeclared identifier
+C:\Users\white\source\repos\BadDLL\GetModuleHandle.c(9,7): error C2146: syntax error: missing ';' before identifier 'pPeb'
+C:\Users\white\source\repos\BadDLL\GetModuleHandle.c(9,12): error C2065: 'pPeb': undeclared identifier
+C:\Users\white\source\repos\BadDLL\GetModuleHandle.c(9,18): error C2065: 'PEB': undeclared identifier
+C:\Users\white\source\repos\BadDLL\GetModuleHandle.c(9,19): error C2059: syntax error: ')'
+C:\Users\white\source\repos\BadDLL\GetModuleHandle.c(15,14): error C2065: 'pPeb': undeclared identifier
+C:\Users\white\source\repos\BadDLL\GetModuleHandle.c(15,16): error C2223: left of '->ImageBaseAddress' must point to struct/union
+C:\Users\white\source\repos\BadDLL\GetModuleHandle.c(15,3): warning C4033: 'GetMOduleHandleAReplacement' must return a value
+C:\Users\white\source\repos\BadDLL\GetModuleHandle.c(31,31): warning C4090: 'function': different 'const' qualifiers
+C:\Users\white\source\repos\BadDLL\GetModuleHandle.c(37,23): warning C4090: 'function': different 'const' qualifiers
+C:\Users\white\source\repos\BadDLL\GetModuleHandle.c(46,42): error C2065: 'pPeb': undeclared identifier
+C:\Users\white\source\repos\BadDLL\GetModuleHandle.c(46,44): error C2223: left of '->Ldr' must point to struct/union
+C:\Users\white\source\repos\BadDLL\GetModuleHandle.c(47,80): error C2039: 'InMemoryOrderLinks': is not a member of '_PEB_LDR_DATA'
+C:\Users\white\source\repos\BadDLL\Structs.h(53,16): message : see declaration of '_PEB_LDR_DATA'
+C:\Users\white\source\repos\BadDLL\GetModuleHandle.c(53,13): error C2039: 'BaseDllName': is not a member of '_TRUNCATED_LDR_DATA_TABLE_ENTRY'
+C:\Users\white\source\repos\BadDLL\Structs.h(25,16): message : see declaration of '_TRUNCATED_LDR_DATA_TABLE_ENTRY'
+C:\Users\white\source\repos\BadDLL\GetModuleHandle.c(55,30): error C2039: 'BaseDllName': is not a member of '_TRUNCATED_LDR_DATA_TABLE_ENTRY'
+C:\Users\white\source\repos\BadDLL\Structs.h(25,16): message : see declaration of '_TRUNCATED_LDR_DATA_TABLE_ENTRY'
+C:\Users\white\source\repos\BadDLL\GetModuleHandle.c(55,50): warning C4133: 'function': incompatible types - from 'LPCSTR' to 'LPCWSTR'
+C:\Users\white\source\repos\BadDLL\GetModuleHandle.c(55,8): error C2198: 'IsWStrEqualCStr': too few arguments for call
+C:\Users\white\source\repos\BadDLL\GetModuleHandle.c(56,47): error C2039: 'BaseDllName': is not a member of '_TRUNCATED_LDR_DATA_TABLE_ENTRY'
+C:\Users\white\source\repos\BadDLL\Structs.h(25,16): message : see declaration of '_TRUNCATED_LDR_DATA_TABLE_ENTRY'
+C:\Users\white\source\repos\BadDLL\GetModuleHandle.c(56,13): warning C4473: 'wprintf' : not enough arguments passed for format string
+C:\Users\white\source\repos\BadDLL\GetModuleHandle.c(56,13): message : placeholders and their parameters expect 1 variadic arguments, but 0 were provided
+C:\Users\white\source\repos\BadDLL\GetModuleHandle.c(56,13): message : the missing variadic argument 1 is required by format string '%s'
+C:\Users\white\source\repos\BadDLL\GetModuleHandle.c(60,36): error C2039: 'FullDllName': is not a member of '_TRUNCATED_LDR_DATA_TABLE_ENTRY'
+C:\Users\white\source\repos\BadDLL\Structs.h(25,16): message : see declaration of '_TRUNCATED_LDR_DATA_TABLE_ENTRY'
+C:\Users\white\source\repos\BadDLL\GetModuleHandle.c(60,12): warning C4473: 'wprintf' : not enough arguments passed for format string
+C:\Users\white\source\repos\BadDLL\GetModuleHandle.c(60,12): message : placeholders and their parameters expect 1 variadic arguments, but 0 were provided
+C:\Users\white\source\repos\BadDLL\GetModuleHandle.c(60,12): message : the missing variadic argument 1 is required by format string '%s'
+C:\Users\white\source\repos\BadDLL\GetModuleHandle.c(66,8): warning C4133: '=': incompatible types - from '_LIST_ENTRY *' to 'PTRUNCATED_LDR_DATA_TABLE_ENTRY'
+C:\Users\white\source\repos\BadDLL\GetModuleHandle.c(70,20): warning C4090: 'function': different 'const' qualifiers
+  GetProcAddress.c
+C:\Users\white\source\repos\BadDLL\GetProcAddress.c(27,25): warning C4047: '<=': 'LPCSTR' differs in levels of indirection from 'int'
+C:\Users\white\source\repos\BadDLL\GetProcAddress.c(51,23): warning C4133: '>=': incompatible types - from 'PBYTE' to 'PVOID'
+C:\Users\white\source\repos\BadDLL\GetProcAddress.c(51,67): warning C4133: '<': incompatible types - from 'PBYTE' to 'PVOID'
+C:\Users\white\source\repos\BadDLL\GetProcAddress.c(61,48): warning C4013: 'GetModuleHandleAReplacement' undefined; assuming extern returning int
+C:\Users\white\source\repos\BadDLL\GetProcAddress.c(61,87): warning C4047: 'function': 'HMODULE' differs in levels of indirection from 'int'
+C:\Users\white\source\repos\BadDLL\GetProcAddress.c(61,48): warning C4024: 'GetProcAddressReplacement': different types for formal and actual parameter 1
+C:\Users\white\source\repos\BadDLL\GetProcAddress.c(39,10): warning C4133: 'initializing': incompatible types - from 'PWORD' to 'PDWORD'
+C:\Users\white\source\repos\BadDLL\GetProcAddress.c(40,10): warning C4133: 'initializing': incompatible types - from 'PWORD' to 'PDWORD'
+  IATHook.c
+C:\Users\white\source\repos\BadDLL\Structs.h(12,37): warning C4091: 'typedef ': ignored on left of 'PVOID' when no variable is declared
+C:\Users\white\source\repos\BadDLL\Structs.h(16,16): error C2373: 'PPS_POST_PROCESS_INIT_ROUTINE': redefinition; different type modifiers
+C:\Users\white\source\repos\BadDLL\Structs.h(14,15): message : see declaration of 'PPS_POST_PROCESS_INIT_ROUTINE'
+C:\Users\white\source\repos\BadDLL\Structs.h(21,2): error C2061: syntax error: identifier 'UNICODE_STRING'
+C:\Users\white\source\repos\BadDLL\Structs.h(22,17): error C2061: syntax error: identifier 'CommandLine'
+C:\Users\white\source\repos\BadDLL\Structs.h(22,17): error C2059: syntax error: ';'
+C:\Users\white\source\repos\BadDLL\Structs.h(23,1): error C2059: syntax error: '}'
+C:\Users\white\source\repos\BadDLL\Structs.h(44,2): error C2061: syntax error: identifier 'PPEB_LDR_DATA'
+C:\Users\white\source\repos\BadDLL\Structs.h(50,1): error C2059: syntax error: '}'
+C:\Users\white\source\repos\BadDLL\Structs.h(76,28): error C2011: '_LIST_ENTRY': 'struct' type redefinition
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\um\winnt.h(1170,16): message : see declaration of '_LIST_ENTRY'
+C:\Users\white\source\repos\BadDLL\IATHook.c(5,36): warning C4028: formal parameter 2 different from declaration
+C:\Users\white\source\repos\BadDLL\IATHook.c(29,7): warning C4013: 'IsEqualCStr' undefined; assuming extern returning int
+C:\Users\white\source\repos\BadDLL\IATHook.c(30,30): warning C4133: 'function': incompatible types - from 'PCWSTR' to 'PCSTR'
+C:\Users\white\source\repos\BadDLL\IATHook.c(36,52): warning C4133: 'function': incompatible types - from 'PCSTR' to 'LPCWSTR'
+C:\Users\white\source\repos\BadDLL\IATHook.c(36,67): warning C4133: 'function': incompatible types - from 'PCWSTR' to 'LPCSTR'
+C:\Users\white\source\repos\BadDLL\IATHook.c(44,110): error C2143: syntax error: missing ';' before '{'
+C:\Users\white\source\repos\BadDLL\IATHook.c(46,51): error C2065: 'pModuleEntry': undeclared identifier
+C:\Users\white\source\repos\BadDLL\IATHook.c(46,53): error C2223: left of '->OriginalFirstThunk' must point to struct/union
+C:\Users\white\source\repos\BadDLL\IATHook.c(47,43): error C2065: 'pModuleEntry': undeclared identifier
+C:\Users\white\source\repos\BadDLL\IATHook.c(47,45): error C2223: left of '->FirstThunk' must point to struct/union
+C:\Users\white\source\repos\BadDLL\IATHook.c(50,31): warning C4047: '!=': 'unsigned __int64' differs in levels of indirection from 'void *'
+C:\Users\white\source\repos\BadDLL\IATHook.c(53,34): warning C4133: 'function': incompatible types - from 'PCWSTR' to 'const char *'
+C:\Users\white\source\repos\BadDLL\IATHook.c(58,24): warning C4047: '=': 'unsigned __int64' differs in levels of indirection from 'PVOID'
+C:\Users\white\source\repos\BadDLL\IATHook.c(66,14): warning C4047: 'return': 'PVOID' differs in levels of indirection from 'BOOL'
+C:\Users\white\source\repos\BadDLL\IATHook.c(5): fatal  error C1075: '{': no matching token found
+  malware.c
+C:\Users\white\source\repos\BadDLL\Structs.h(12,37): warning C4091: 'typedef ': ignored on left of 'PVOID' when no variable is declared
+C:\Users\white\source\repos\BadDLL\Structs.h(16,16): error C2373: 'PPS_POST_PROCESS_INIT_ROUTINE': redefinition; different type modifiers
+C:\Users\white\source\repos\BadDLL\Structs.h(14,15): message : see declaration of 'PPS_POST_PROCESS_INIT_ROUTINE'
+C:\Users\white\source\repos\BadDLL\Structs.h(21,2): error C2061: syntax error: identifier 'UNICODE_STRING'
+C:\Users\white\source\repos\BadDLL\Structs.h(22,17): error C2061: syntax error: identifier 'CommandLine'
+C:\Users\white\source\repos\BadDLL\Structs.h(22,17): error C2059: syntax error: ';'
+C:\Users\white\source\repos\BadDLL\Structs.h(23,1): error C2059: syntax error: '}'
+C:\Users\white\source\repos\BadDLL\Structs.h(44,2): error C2061: syntax error: identifier 'PPEB_LDR_DATA'
+C:\Users\white\source\repos\BadDLL\Structs.h(50,1): error C2059: syntax error: '}'
+C:\Users\white\source\repos\BadDLL\Structs.h(76,28): error C2011: '_LIST_ENTRY': 'struct' type redefinition
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\um\winnt.h(1170,16): message : see declaration of '_LIST_ENTRY'
+C:\Users\white\source\repos\BadDLL\malware.c(21,2): warning C4013: 'printf' undefined; assuming extern returning int
+C:\Users\white\source\repos\BadDLL\malware.c(23,22): warning C4133: 'function': incompatible types - from 'LPCSTR' to 'LPCWSTR'
+C:\Users\white\source\repos\BadDLL\malware.c(29,32): warning C4133: 'function': incompatible types - from 'HMODULE' to 'PBYTE'
+C:\Users\white\source\repos\BadDLL\malware.c(29,67): warning C4133: 'function': incompatible types - from 'char [13]' to 'HMODULE'
+C:\Users\white\source\repos\BadDLL\malware.c(29,83): warning C4133: 'function': incompatible types - from 'char [12]' to 'PCWSTR'
+  utilities.c
+C:\Users\white\source\repos\BadDLL\utilities.c(15,28): warning C4028: formal parameter 1 different from declaration
+C:\Users\white\source\repos\BadDLL\utilities.c(15,44): warning C4028: formal parameter 2 different from declaration
+C:\Users\white\source\repos\BadDLL\utilities.c(18,25): warning C4133: 'function': incompatible types - from 'LPCSTR' to 'LPCWSTR'
+C:\Users\white\source\repos\BadDLL\utilities.c(18,51): warning C4133: 'function': incompatible types - from 'LPCSTR' to 'LPCWSTR'
+C:\Users\white\source\repos\BadDLL\utilities.c(34,13): warning C4133: 'function': incompatible types - from 'WCHAR [260]' to 'const char *'
+C:\Users\white\source\repos\BadDLL\utilities.c(34,20): warning C4133: 'function': incompatible types - from 'WCHAR [260]' to 'const char *'
+  Generating Code...
