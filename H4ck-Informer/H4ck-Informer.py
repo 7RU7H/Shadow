@@ -2,18 +2,41 @@
 import requests, threading, os, sys, time, subprocess, logging, argparse, re, asyncio, pkg_resources
 from bs4 import BeautifulSoup 
 from typing import Any, Awaitable 
+from dataclasses import dataclass
 
+# slots break in multiple inheritance AVOID, 20% efficiency over no slot dict
+@dataclass(slots=True)
+class Informer_Config:
+    informer_path: str
+    app_name: str
+    # logging directory, output directory    
+
+
+    def __init__(self, args):
+        self.informer_path = os.exec('pwd')
+        self.app_name = os.exec('')
 
 class print_colors:
-   HEADER = '\033[95m'
-   BLUE = '\033[94m'
-   CYAN = '\033[96m'
-   GREEN = '\033[92m'
-   WARNING = '\033[93m'
-   FAIL = '\033[91m'
-   ENDC = '\033[0m'
-   BOLD = '\033[1m'
-   UNDERLINE = '\033[4m'
+  HEADER = '\033[95m'
+  OKBLUE = '\033[94m'
+  OKCYAN = '\033[96m'
+  OKGREEN = '\033[92m'
+  WARNING = '\033[93m'
+  FAIL = '\033[91m'
+  ENDC = '\033[0m'
+  BOLD = '\033[1m'
+  UNDERLINE = '\033[4m'
+  WHITE = '\033[97m'
+  YELLOW = '\033[93m'
+  RED = '\033[91m'
+  BLACK = '\033[90m'
+  MAGENTA = '\033[95m'
+  GREEN = '\033[92m'
+  BLUE = '\033[94m'
+  CYAN = '\033[96m'
+  ORANGE = '\033[33m' 
+  INDIGO = '\033[34m' 
+  VIOLET = '\033[35m'
 
 
 async def run_sequence(*functions: Awaitable[Any]) -> None:
@@ -23,6 +46,7 @@ async def run_sequence(*functions: Awaitable[Any]) -> None:
 async def run_parallelism(*functions: Awaitable[Any]) -> None:
     await asyncio.gather(*functions)
 
+# TODO this does nothing
 async def get_summary(url):
    # Simulate a delay
    await asyncio.sleep(1)
@@ -52,39 +76,45 @@ urls = {
    # Add more sites as needed
 }
 
-def test_modules():
-    combined = list(sys.modules.items()) + [(dist.project_name, dist.version) for dist in pkg_resources.working_set]
-    for item in combined:
-        try:
-            if len(item) == 2:
-                module_name, module = item
-                print(f"{module_name}: {module.__version__}")
-            else:
-                project_name, version = item[0], item[1]
-                print(f"{project_name}: {version}")
-        except AttributeError:
-            print(f"{print_colors.WARNING}{module_name} does not have a __version__ attribute {print_colors.ENDC}")
-
 def main():
     
     # Logging
     logging.basicConfig(filename='app.log', filemode='w', format='%(name)s - %(levelname)s - %(message)s')
     logger = logging.getLogger(__name__)
     
-    # Run tests
-    print(print_colors.HEADER + "Testing HEADER" + print_colors.ENDC)
-    print(print_colors.BLUE + "Testing BLUE" + print_colors.ENDC)
-    print(print_colors.CYAN + "Testing CYAN" + print_colors.ENDC)
-    print(print_colors.GREEN + "Testing GREEN" + print_colors.ENDC)
-    print(print_colors.WARNING + "Testing WARNING" + print_colors.ENDC)
-    print(print_colors.FAIL + "Testing FAIL" + print_colors.ENDC)
-    print(print_colors.ENDC + "Testing ENDC" + print_colors.ENDC)
-    print(print_colors.BOLD + "Testing BOLD" + print_colors.ENDC)
-    print(print_colors.UNDERLINE + "Testing UNDERLINE" + print_colors.ENDC)
+    print(print_colors.OKBLUE + '_________  ___  ___  _______           ___  ___  ___   ___  ________  ___  __                   ___  ________   ________ ________  ________  _____ ______   ________  ________     ' + print_colors.ENDC)
+    print(print_colors.OKCYAN + '|\___   ___\\  \|\  \|\  ___ \         |\  \|\  \|\  \ |\  \|\   ____\|\  \|\  \                |\  \|\   ___  \|\  _____\\   __  \|\   __  \|\   _ \  _   \|\_____  \|\   __  \    ' + print_colors.ENDC)
+    print(print_colors.OKGREEN + '\|___ \  \_\ \  \\\  \ \   __/|        \ \  \\\  \ \  \\_\  \ \  \___|\ \  \/  /|_  ____________\ \  \ \  \\ \  \ \  \__/\ \  \|\  \ \  \|\  \ \  \\\__\ \  \|____|\ /\ \  \|\  \  ' + print_colors.ENDC)
+    print(print_colors.YELLOW + '     \ \  \ \ \   __  \ \  \_|/__       \ \   __  \ \______  \ \  \    \ \   ___  \|\____________\ \  \ \  \\ \  \ \   __\\ \  \\\  \ \   _  _\ \  \\|__| \  \    \|\  \ \   _  _\  ' + print_colors.ENDC)
+    print(print_colors.RED + '      \ \  \ \ \  \ \  \ \  \_|\ \       \ \  \ \  \|_____|\  \ \  \____\ \  \\ \  \|____________|\ \  \ \  \\ \  \ \  \_| \ \  \\\  \ \  \\  \\ \  \    \ \  \  __\_\  \ \  \\  \| ' + print_colors.ENDC)
+    print(print_colors.GREEN + '       \ \__\ \ \__\ \__\ \_______\       \ \__\ \__\     \ \__\ \_______\ \__\\ \__\              \ \__\ \__\\ \__\ \__\   \ \_______\ \__\\ _\\ \__\    \ \__\|\_______\ \__\\ _\ ' + print_colors.ENDC)
+    print(print_colors.INDIGO + '        \|__|  \|__|\|__|\|_______|        \|__|\|__|      \|__|\|_______|\|__| \|__|               \|__|\|__| \|__|\|__|    \|_______|\|__|\|__|\|__|     \|__|\|_______|\|__|\|__|' + print_colors.ENDC)
 
-    test_modules()
-    
+     
     url = "https://news.ycombinator.com"
+
+    parser = argparse.ArgumentParser(#prog='H4ck-Inf0rm3r',
+                                    usage='%(prog)s [options] target',
+                                    description='Automated InfoSec, Hacker, CVEs News Aggregator',
+                                    epilog='Happy Hacking :)',
+                                    add_help=True,)
+    args = parser.parse_args()
+    args_dict = vars(args)
+
+    curr = Informer_Config(**args_dict)
+
+ 
+    if len(sys.argv) ==  1:
+        parser.print_help()
+        print("")
+        print("Open \`crontab -e\` and add both or adjust")
+        print(f"0 5 * * * {curr.informer_path}{curr.app_name}")
+        print(f"0 11 * * * {curr.informer_path}{curr.app_name}")
+        print(f"0 17 * * * {curr.informer_path}{curr.app_name}")
+        print(f"0 23 * * * {curr.informer_path}{curr.app_name}")
+        sys.exit(1)
+
 
 if __name__ == "__main__":
    main()
+   sys.exit(0)
