@@ -104,6 +104,7 @@ def main():
     curr = Informer_Config(**args_dict)
 
  
+
     if len(sys.argv) ==  1:
         parser.print_help()
         print("")

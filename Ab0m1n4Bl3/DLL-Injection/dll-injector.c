@@ -38,16 +38,7 @@ int main(int argc, char *argv[]) {
     DWORD processId = getProcessId(processName);
     if (!processId) {
         exit(1);
-    }ryHackMe T-Shirt
-TryHackMe Baseball Cap
-TryHackMe Baseball Cap
-TryHackMe Baseball Cap
-7 Day Streak Freeze
-7 Day Streak Freeze
-7 Day Streak Freeze
-1 Month Premium Voucher
-1 Month Premium Voucher
-1 Month Premium Voucher
+    }
 
 
     if (!GetFullPathName(dllLibName, sizeof(dllLibFullPath), dllLibFullPath, NULL)) {
