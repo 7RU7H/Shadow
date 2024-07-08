@@ -1,4 +1,10 @@
-# Ninja
+# README
+
+
+This project is dead - xc exists and I learnt alot about project design, golang and golang design, AI, time management, QUIC - much of the go-nc/netcat/xc liek or copied code will go to OmniServer and the ideas will die else where or here. 
+
+
+# OLD Readme
 
 The original starting point that i want to be a module in Shadow
 

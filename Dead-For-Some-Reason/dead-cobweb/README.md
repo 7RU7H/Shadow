@@ -1,4 +1,8 @@
-# Cobweb Readme
+# README
+
+This project is dead because after evaluating the use case and theorising how I may will win a game of KOTH on THM this is not useful for myself or anyone else, there are better tools for doing XSS, webshells should be expendable and quickly modifiable, there are better backdooring mechanicisms, xct's xc exists, all the hopes would be in found in other projects anyway and TLS is really boring so I am not tricking myself into continue this just for TLS and future improvements. Also there are cooler ssh backdooring that more interesting 
+
+# Original hopes
 
 Cobweb is a Golang is https server with an ssh backdoor. The idea being a upgrade from a webshell in that it is a web server that pretends to be part of another webserver. In the hope using in THM KOTH and HTB Battlegrounds as an Easy way back in
 - Redirect to legitimate site
